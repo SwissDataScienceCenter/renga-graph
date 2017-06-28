@@ -3,9 +3,16 @@ name := "graph-navigation-service"
 version := "0.0.1-SNAPSHOT"
 scalaVersion := "2.11.8"
 
-//lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = Project(
+  id   = "graph-navigation-service",
+  base = file(".")
+).dependsOn(
+  core
+).enablePlugins(
+  PlayScala
+)
 
-//scalaVersion := "2.11.8"
+lazy val core = RootProject(file("../graph-core"))
 
 resolvers += DefaultMavenRepository
 
@@ -25,11 +32,7 @@ libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_ve
 
 import com.typesafe.sbt.packager.docker._
 
-// Allows for alpine images
-//enablePlugins(AshScriptPlugin)
-
 dockerBaseImage := "openjdk:8-jre-alpine"
-//dockerBaseImage := "openjdk:8-jre"
 
 dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
 // Replace entry point
