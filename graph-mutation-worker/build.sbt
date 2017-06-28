@@ -3,6 +3,15 @@ name := "graph-mutation-worker"
 version := "0.0.1-SNAPSHOT"
 scalaVersion := "2.11.8"
 
+lazy val root = Project(
+  id   = "graph-mutation-worker",
+  base = file(".")
+).dependsOn(
+  core
+)
+
+lazy val core = RootProject(file("../graph-core"))
+
 resolvers += DefaultMavenRepository
 
 lazy val slick_version = "3.2.0"
