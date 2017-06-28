@@ -21,18 +21,30 @@ name := "graph-typesystem-service"
 version := "0.0.1-SNAPSHOT"
 scalaVersion := "2.11.8"
 
-resolvers += DefaultMavenRepository
-//resolvers += "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/"
+lazy val root = Project(
+  id   = "graph-typesystem-service",
+  base = file(".")
+).dependsOn(
+  core,
+  typesystemPersistence
+).settings(
+  projectDependencies +=
+    (projectID in typesystemPersistence).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+).enablePlugins(
+  PlayScala
+)
 
-//lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val core = RootProject(file("../graph-core"))
+
+lazy val typesystemPersistence = RootProject(file("../graph-typesystem-persistence"))
+
+resolvers += DefaultMavenRepository
 
 lazy val play_slick_version = "2.1.0"
 lazy val postgresql_version = "42.0.0"
 
 libraryDependencies += filters
 libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
-//libraryDependencies += "ch.datascience" %% "graph-type-utils" % version.value
-//libraryDependencies += "ch.datascience" %% "graph-type-manager" % version.value
 libraryDependencies += "org.postgresql" % "postgresql" % postgresql_version
 
 // Runtime dependencies (runtime removed to load them when sbt console; I am too lazy to redefine console)
@@ -52,11 +64,7 @@ fullRunTask(initDB, Runtime, "init.Main")
 
 import com.typesafe.sbt.packager.docker._
 
-// Allows for alpine images
-//enablePlugins(AshScriptPlugin)
-
 dockerBaseImage := "openjdk:8-jre-alpine"
-//dockerBaseImage := "openjdk:8-jre"
 
 dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
 // Replace entry point
