@@ -15,4 +15,3 @@ libraryDependencies += "org.apache.tinkerpop" % "gremlin-core" % tinkerpop_versi
 lazy val scalatest_version = "3.0.1"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % scalatest_version % Test
-
