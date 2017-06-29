@@ -5,9 +5,9 @@ import javax.inject.{Inject, Singleton}
 
 import ch.datascience.graph.elements.mutation.Mutation
 import ch.datascience.graph.elements.mutation.json.MutationFormat
-import ch.datascience.graph.elements.mutation.log.model.Event
+import ch.datascience.graph.elements.mutation.log.model.EventStatus
+import ch.datascience.graph.elements.mutation.log.model.json._
 import models.{RequestDAO, RequestWorker, ResponseWorker}
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -57,19 +57,20 @@ class MutationController @Inject()(
       case JsSuccess(uuid, _) =>
         val future = dao.findByIdWithResponse(uuid)
         future map {
-          case Some((req, Some(res))) =>
-            Ok(JsObject(Seq("request" -> Json.toJson(req), "response" -> Json.toJson(res), "status" -> JsString("completed"))))
-          case Some((req, None)) =>
-            Ok(JsObject(Seq("request" -> Json.toJson(req), "status" -> JsString("pending"))))
+          case Some((req, optRes)) => Ok(Json.toJson(EventStatus(req, optRes)))
+//          case Some((req, Some(res))) =>
+//            Ok(JsObject(Seq("request" -> Json.toJson(req), "response" -> Json.toJson(res), "status" -> JsString("completed"))))
+//          case Some((req, None)) =>
+//            Ok(JsObject(Seq("request" -> Json.toJson(req), "status" -> JsString("pending"))))
           case None => NotFound
         }
     }
   }
 
-  private[this] implicit lazy val eventWrites: Writes[Event] = (
-    (JsPath \ "uuid").write[String] and
-      (JsPath \ "event").write[JsValue] and
-      (JsPath \ "timestamp").write[String]
-  ){ event => (event.uuid.toString, event.event, event.created.atZone(java.time.ZoneId.of("UTC")).toString) }
+//  private[this] implicit lazy val eventWrites: Writes[Event] = (
+//    (JsPath \ "uuid").write[String] and
+//      (JsPath \ "event").write[JsValue] and
+//      (JsPath \ "timestamp").write[String]
+//  ){ event => (event.uuid.toString, event.event, event.created.atZone(java.time.ZoneId.of("UTC")).toString) }
 
 }
