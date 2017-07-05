@@ -21,6 +21,7 @@ package ch.datascience.graph.elements.new_.build
 import ch.datascience.graph.elements.MultiPropertyValue
 import ch.datascience.graph.elements.detached.build._
 import ch.datascience.graph.elements.new_.NewVertex
+import ch.datascience.graph.naming.NamespaceAndName
 
 import scala.collection.mutable
 
@@ -49,8 +50,12 @@ class NewVertexBuilder(val tempId: NewVertex#TempId) {
     this
   }
 
-  def addSingleProperty(key: NewVertex#Prop#Key, value: NewVertex#Prop#Value): this.type = {
-    addProperty(new DetachedSingleValueBuilder(key, value))
+  def addSingleProperty(key: String, value: NewVertex#Prop#Value, block: (DetachedRichPropertyBuilder) => Unit): this.type = {
+    addSingleProperty(makeKey(key), value, block)
+  }
+
+  def addSingleProperty(key: String, value: NewVertex#Prop#Value): this.type = {
+    addSingleProperty(key, value, { _ => () } : (DetachedRichPropertyBuilder) => Unit)
   }
 
   def addSingleProperty(key: NewVertex#Prop#Key, value: NewVertex#Prop#Value, block: (DetachedRichPropertyBuilder) => Unit): this.type = {
@@ -58,6 +63,10 @@ class NewVertexBuilder(val tempId: NewVertex#TempId) {
     addProperty(builder)
     block(builder.property)
     this
+  }
+
+  def addSingleProperty(key: NewVertex#Prop#Key, value: NewVertex#Prop#Value): this.type = {
+    addSingleProperty(key, value, { _ => () } : (DetachedRichPropertyBuilder) => Unit)
   }
 
   def addSetProperty(key: NewVertex#Prop#Key): this.type = {
@@ -123,5 +132,7 @@ class NewVertexBuilder(val tempId: NewVertex#TempId) {
     }
     this
   }
+
+  private[this] def makeKey(key: String): NewVertex#Prop#Key = NamespaceAndName(key)
 
 }
