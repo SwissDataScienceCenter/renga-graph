@@ -84,6 +84,10 @@
       "multiplicity": "simple"
     },
     {
+      "key": "resource:create",
+      "multiplicity": "simple"
+    },
+    {
       "key": "resource:stored_in",
       "multiplicity": "simple"
     }
