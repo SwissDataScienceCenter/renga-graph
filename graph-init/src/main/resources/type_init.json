@@ -40,7 +40,12 @@
     },
     {
       "key": "resource:bucket_backend_id",
-      "data_type": "uuid",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "resource:bucket_backend",
+      "data_type": "string",
       "cardinality": "single"
     },
     {
@@ -61,7 +66,7 @@
     },
     {
       "key": "resource:bucket",
-      "properties": ["resource:bucket_backend_id", "resource:bucket_name"]
+      "properties": ["resource:bucket_backend_id", "resource:bucket_name", "resource:bucket_backend"]
     }
   ],
 
