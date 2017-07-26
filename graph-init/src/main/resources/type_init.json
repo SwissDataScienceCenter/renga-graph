@@ -14,12 +14,17 @@
       "cardinality": "single"
     },
     {
-      "key": "deploy:id",
+      "key": "deploy:deployer_id",
+      "data_type": "uuid",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:backend_id",
       "data_type": "string",
       "cardinality": "single"
     },
     {
-      "key": "deploy:image",
+      "key": "deploy:description",
       "data_type": "string",
       "cardinality": "single"
     },
@@ -53,7 +58,7 @@
   "named_types": [
     {
       "key": "deploy:deployment",
-      "properties": ["deploy:id", "deploy:image", "deploy:status"]
+      "properties": ["deploy:deployer_id", "deploy:description", "deploy:status"]
     },
     {
       "key": "resource:file",
@@ -76,6 +81,10 @@
     },
     {
       "key": "resource:write",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:create",
       "multiplicity": "simple"
     },
     {
