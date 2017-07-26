@@ -31,6 +31,8 @@ lazy val root = Project(
 lazy val core = RootProject(file("../graph-core"))
 
 resolvers += DefaultMavenRepository
+resolvers += "jitpack" at "https://jitpack.io"
+resolvers += "Oracle Released Java Packages" at "http://download.oracle.com/maven"
 
 lazy val slick_version = "3.2.0"
 lazy val play_slick_version = "2.1.0"
