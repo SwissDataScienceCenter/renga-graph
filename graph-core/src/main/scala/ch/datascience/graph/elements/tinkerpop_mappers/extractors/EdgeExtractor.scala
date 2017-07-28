@@ -24,19 +24,19 @@ import org.apache.tinkerpop.gremlin.structure.Edge
 import scala.collection.JavaConverters._
 
 /**
-  * Created by johann on 30/05/17.
-  */
+ * Created by johann on 30/05/17.
+ */
 object EdgeExtractor extends Extractor[Edge, ExtractedEdge] {
 
-  def apply(edge: Edge): ExtractedEdge = {
+  def apply( edge: Edge ): ExtractedEdge = {
     val properties = edge.properties[java.lang.Object]().asScala.toList
     val extractedProperties = for {
       prop <- properties
-    } yield LeafPropertyExtractor(prop)
+    } yield LeafPropertyExtractor( prop )
     // outVertex ---label---> inVertex
     val from = edge.outVertex().id()
     val to = edge.inVertex().id()
-    ExtractedEdge(edge.id(), edge.label(), from, to, extractedProperties)
+    ExtractedEdge( edge.id(), edge.label(), from, to, extractedProperties )
   }
 
 }

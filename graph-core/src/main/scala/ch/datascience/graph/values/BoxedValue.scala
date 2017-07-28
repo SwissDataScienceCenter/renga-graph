@@ -23,8 +23,8 @@ import java.util.UUID
 import ch.datascience.graph.types.DataType
 
 /**
-  * Created by johann on 27/04/17.
-  */
+ * Created by johann on 27/04/17.
+ */
 sealed abstract class BoxedValue {
 
   type Self
@@ -46,65 +46,65 @@ sealed abstract class BoxedValue {
   }
 
   @throws[java.lang.ClassCastException]
-  def unboxAs[V: ValidValue]: V = self.asInstanceOf[V]
+  def unboxAs[V : ValidValue]: V = self.asInstanceOf[V]
 
 }
 
-final case class StringValue(self: String) extends BoxedValue {
+final case class StringValue( self: String ) extends BoxedValue {
   type Self = String
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class CharValue(self: Char) extends BoxedValue {
+final case class CharValue( self: Char ) extends BoxedValue {
   type Self = Char
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class BooleanValue(self: Boolean) extends BoxedValue {
+final case class BooleanValue( self: Boolean ) extends BoxedValue {
   type Self = Boolean
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class ByteValue(self: Byte) extends BoxedValue {
+final case class ByteValue( self: Byte ) extends BoxedValue {
   type Self = Byte
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class ShortValue(self: Short) extends BoxedValue {
+final case class ShortValue( self: Short ) extends BoxedValue {
   type Self = Short
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class IntValue(self: Int) extends BoxedValue {
+final case class IntValue( self: Int ) extends BoxedValue {
   type Self = Int
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class LongValue(self: Long) extends BoxedValue {
+final case class LongValue( self: Long ) extends BoxedValue {
   type Self = Long
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class FloatValue(self: Float) extends BoxedValue {
+final case class FloatValue( self: Float ) extends BoxedValue {
   type Self = Float
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class DoubleValue(self: Double) extends BoxedValue {
+final case class DoubleValue( self: Double ) extends BoxedValue {
   type Self = Double
 
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
-final case class UuidValue(self: UUID) extends BoxedValue {
+final case class UuidValue( self: UUID ) extends BoxedValue {
   type Self = UUID
 
   def isValidValue: ValidValue[UUID] = implicitly[ValidValue[Self]]
@@ -112,32 +112,32 @@ final case class UuidValue(self: UUID) extends BoxedValue {
 
 object BoxedValue {
 
-  def apply(x: String): BoxedValue = StringValue(x)
+  def apply( x: String ): BoxedValue = StringValue( x )
 
-  def apply(x: Char): BoxedValue = CharValue(x)
+  def apply( x: Char ): BoxedValue = CharValue( x )
 
-  def apply(x: Boolean): BoxedValue = BooleanValue(x)
+  def apply( x: Boolean ): BoxedValue = BooleanValue( x )
 
-  def apply(x: Byte): BoxedValue = ByteValue(x)
+  def apply( x: Byte ): BoxedValue = ByteValue( x )
 
-  def apply(x: Short): BoxedValue = ShortValue(x)
+  def apply( x: Short ): BoxedValue = ShortValue( x )
 
-  def apply(x: Int): BoxedValue = IntValue(x)
+  def apply( x: Int ): BoxedValue = IntValue( x )
 
-  def apply(x: Long): BoxedValue = LongValue(x)
+  def apply( x: Long ): BoxedValue = LongValue( x )
 
-  def apply(x: Float): BoxedValue = FloatValue(x)
+  def apply( x: Float ): BoxedValue = FloatValue( x )
 
-  def apply(x: Double): BoxedValue = DoubleValue(x)
+  def apply( x: Double ): BoxedValue = DoubleValue( x )
 
-  def apply(x: UUID): BoxedValue = UuidValue(x)
+  def apply( x: UUID ): BoxedValue = UuidValue( x )
 
   implicit object boxedIsBoxed extends IsBoxedValue[BoxedValue] {
-    def asBoxedValue(v: BoxedValue): BoxedValue = v
+    def asBoxedValue( v: BoxedValue ): BoxedValue = v
   }
 
 }
 
 sealed trait IsBoxedValue[V] {
-  def asBoxedValue(v: V): BoxedValue
+  def asBoxedValue( v: V ): BoxedValue
 }

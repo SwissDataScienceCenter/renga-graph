@@ -24,9 +24,9 @@ trait MultiRecord extends Element {
   final type Properties = Map[Prop#Key, MultiPropertyValue[Prop]]
 
   /**
-    * Properties
-    * @return the properties
-    */
+   * Properties
+   * @return the properties
+   */
   def properties: Properties
 
   //TODO: define <|, like for [[Record]]

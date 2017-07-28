@@ -23,11 +23,11 @@ import ch.datascience.graph.elements.Property
 import ch.datascience.graph.elements.persisted.impl.ImplPersistedRecordLeafProperty
 
 /**
-  * Created by johann on 29/05/17.
-  */
+ * Created by johann on 29/05/17.
+ */
 sealed trait PersistedProperty
   extends Property
-    with PersistedElement {
+  with PersistedElement {
 
   type PathType <: PropertyPath
 
@@ -37,39 +37,39 @@ sealed trait PersistedProperty
 
 trait PersistedRecordProperty
   extends PersistedProperty
-    with PersistedElement {
+  with PersistedElement {
 
   final type PathType = PropertyPathFromRecord
 
-  final def path: PropertyPathFromRecord = PropertyPathFromRecord(parent, key)
+  final def path: PropertyPathFromRecord = PropertyPathFromRecord( parent, key )
 
 }
 
 trait PersistedMultiRecordProperty
   extends PersistedProperty
-    with PersistedElement
-    with HasId {
+  with PersistedElement
+  with HasId {
 
-//  final type PathType = PropertyPathFromMultiRecord[Id]
+  //  final type PathType = PropertyPathFromMultiRecord[Id]
   type PathType <: PropertyPathFromMultiRecord[Id]
 
-//  final def path: PropertyPathFromMultiRecord[Id] = PropertyPathFromMultiRecord(parent, id)
+  //  final def path: PropertyPathFromMultiRecord[Id] = PropertyPathFromMultiRecord(parent, id)
 
 }
 
 object PersistedRecordProperty {
 
   def apply(
-    parent: Path,
-    key: PersistedRecordProperty#Key,
-    value: PersistedRecordProperty#Value
-  ): PersistedRecordProperty = ImplPersistedRecordLeafProperty(parent, key, value)
+      parent: Path,
+      key:    PersistedRecordProperty#Key,
+      value:  PersistedRecordProperty#Value
+  ): PersistedRecordProperty = ImplPersistedRecordLeafProperty( parent, key, value )
 
-  def unapply(prop: PersistedRecordProperty): Option[(Path, PersistedRecordProperty#Key, PersistedRecordProperty#Value)] = {
-    if (prop eq null)
+  def unapply( prop: PersistedRecordProperty ): Option[( Path, PersistedRecordProperty#Key, PersistedRecordProperty#Value )] = {
+    if ( prop eq null )
       None
     else
-      Some(prop.parent, prop.key, prop.value)
+      Some( prop.parent, prop.key, prop.value )
   }
 
 }

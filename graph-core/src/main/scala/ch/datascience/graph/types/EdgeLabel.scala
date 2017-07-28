@@ -32,13 +32,13 @@ trait EdgeLabel extends HasKey {
 
 object EdgeLabel {
 
-  def apply(key: EdgeLabel#Key, multiplicity: Multiplicity): EdgeLabel = ImplEdgeLabel(key, multiplicity)
+  def apply( key: EdgeLabel#Key, multiplicity: Multiplicity ): EdgeLabel = ImplEdgeLabel( key, multiplicity )
 
-  def unapply(edgeLabel: EdgeLabel): Option[(edgeLabel.Key, Multiplicity)] = {
-    if (edgeLabel eq null)
+  def unapply( edgeLabel: EdgeLabel ): Option[( edgeLabel.Key, Multiplicity )] = {
+    if ( edgeLabel eq null )
       None
     else
-      Some(edgeLabel.key, edgeLabel.multiplicity)
+      Some( edgeLabel.key, edgeLabel.multiplicity )
   }
 
 }
