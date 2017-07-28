@@ -3,13 +3,13 @@ package ch.datascience.graph.elements.mutation.worker
 import org.janusgraph.core.JanusGraph
 
 /**
-  * Created by johann on 08/06/17.
-  */
+ * Created by johann on 08/06/17.
+ */
 trait GraphComponent {
 
   protected def graph: JanusGraph
 
-  def execute[A](body: => A): A = {
+  def execute[A]( body: => A ): A = {
     // Get a clean transaction
     val tx = graph.tx()
     tx.rollback()
@@ -19,9 +19,10 @@ trait GraphComponent {
       val res = body
       tx.commit()
       res
-    } catch {
+    }
+    catch {
       case e: Throwable =>
-        println("Rolling back...")
+        println( "Rolling back..." )
         tx.rollback()
         throw e
     }
