@@ -3,8 +3,8 @@ package ch.datascience.graph.init.client
 import play.api.libs.ws.WSClient
 
 /**
-  * Created by johann on 22/06/17.
-  */
+ * Created by johann on 22/06/17.
+ */
 object WSClientFactory {
 
   lazy val client: WSClient = makeStandaloneClient()

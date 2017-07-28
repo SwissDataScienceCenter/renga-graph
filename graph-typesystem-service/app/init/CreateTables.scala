@@ -9,21 +9,21 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.Future
 
 /**
-  * Created by johann on 13/04/17.
-  */
+ * Created by johann on 13/04/17.
+ */
 object CreateTables extends HasDatabaseConfig[JdbcProfile] {
 
-  val dbConfig: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile]("slick.dbs.sqldb")
+  val dbConfig: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile]( "slick.dbs.sqldb" )
 
   def createTables(): Future[Unit] = {
 
     import profile.api._
 
-    val dal = new DatabaseStack(dbConfig)
+    val dal = new DatabaseStack( dbConfig )
 
-    val createSchemas: DBIO[Unit] = dal.schemas.map(_.asInstanceOf[profile.SchemaDescription]).reduce((x, y) => x ++ y).create
+    val createSchemas: DBIO[Unit] = dal.schemas.map( _.asInstanceOf[profile.SchemaDescription] ).reduce( ( x, y ) => x ++ y ).create
 
-    db.run(createSchemas)
+    db.run( createSchemas )
   }
 
 }
