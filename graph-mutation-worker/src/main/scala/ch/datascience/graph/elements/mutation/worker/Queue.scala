@@ -3,19 +3,19 @@ package ch.datascience.graph.elements.mutation.worker
 import scala.concurrent.Promise
 
 /**
-  * Created by johann on 07/06/17.
-  */
+ * Created by johann on 07/06/17.
+ */
 class Queue[A] {
 
   def nonEmpty: Boolean = synchronized {
     self.nonEmpty
   }
 
-  def enqueue(elems: A*): Unit = synchronized {
-    self.enqueue(elems: _*)
+  def enqueue( elems: A* ): Unit = synchronized {
+    self.enqueue( elems: _* )
     currentPromise match {
-      case Some(p) =>
-        p.success(())
+      case Some( p ) =>
+        p.success( () )
         currentPromise = None
       case None => ()
     }
@@ -27,10 +27,10 @@ class Queue[A] {
 
   def register(): Promise[Unit] = synchronized {
     currentPromise match {
-      case Some(p) => p
+      case Some( p ) => p
       case None =>
         val p = Promise[Unit]()
-        currentPromise = Some(p)
+        currentPromise = Some( p )
         p
     }
   }
