@@ -21,9 +21,9 @@ package ch.datascience.graph.elements.persisted.impl
 import ch.datascience.graph.elements.persisted.PersistedVertex
 
 private[persisted] case class ImplPersistedVertex(
-  id: PersistedVertex#Id,
-  types: Set[PersistedVertex#TypeId],
-  properties: PersistedVertex#Properties
+    id:         PersistedVertex#Id,
+    types:      Set[PersistedVertex#TypeId],
+    properties: PersistedVertex#Properties
 ) extends PersistedVertex
 
 ///**

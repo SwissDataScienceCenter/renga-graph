@@ -21,23 +21,23 @@ package graph
 package elements
 
 /**
-  * Base trait for records, i.e. elements that hold properties
-  */
+ * Base trait for records, i.e. elements that hold properties
+ */
 trait Record extends Element {
 
   type Prop <: Property
   final type Properties = Map[Prop#Key, Prop]
 
   /**
-    * Properties
-    * @return the properties
-    */
+   * Properties
+   * @return the properties
+   */
   def properties: Properties
 
-//  protected[elements] def <|(graphType: GraphType { type Key = Prop#Key }): Boolean = graphType match {
-//    case RecordType(props) => props subsetOf properties.keySet
-//    case _ => false
-//  }
+  //  protected[elements] def <|(graphType: GraphType { type Key = Prop#Key }): Boolean = graphType match {
+  //    case RecordType(props) => props subsetOf properties.keySet
+  //    case _ => false
+  //  }
 
 }
 

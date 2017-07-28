@@ -18,11 +18,11 @@
 
 package ch.datascience.graph.types.validation
 
-import ch.datascience.graph.types.{PropertyKey, RecordType}
+import ch.datascience.graph.types.{ PropertyKey, RecordType }
 
 /**
-  * Created by johann on 09/05/17.
-  */
+ * Created by johann on 09/05/17.
+ */
 sealed trait Validated
 
 trait ValidatedPropertyKey extends Validated {

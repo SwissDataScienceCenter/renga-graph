@@ -19,52 +19,51 @@
 package ch.datascience.graph.types
 
 import ch.datascience.graph.bases.HasKey
-import ch.datascience.graph.types.impl.{ImplNamedType, ImplRecordType}
+import ch.datascience.graph.types.impl.{ ImplNamedType, ImplRecordType }
 import ch.datascience.graph.Constants
 
 /**
-  * Base trait for graph types
-  */
+ * Base trait for graph types
+ */
 sealed trait GraphType { self =>
 
-//  type TypeId
-//
-//  type Key
+  //  type TypeId
+  //
+  //  type Key
 
   /**
-    * Subtype check
-    *
-    * @param t the other type
-    * @return true iff this is a subtype of t
-    */
-//  def <<(t: GraphType { type TypeId = self.TypeId; type Key = self.Key }): Boolean
-  def <<(t: GraphType): Boolean
+   * Subtype check
+   *
+   * @param t the other type
+   * @return true iff this is a subtype of t
+   */
+  //  def <<(t: GraphType { type TypeId = self.TypeId; type Key = self.Key }): Boolean
+  def <<( t: GraphType ): Boolean
 
   /**
-    * Supertype check
-    *
-    * @param t the other type
-    * @return true iff this is a supertype of t
-    */
-  final def >>(t: GraphType): Boolean = t << this
+   * Supertype check
+   *
+   * @param t the other type
+   * @return true iff this is a supertype of t
+   */
+  final def >>( t: GraphType ): Boolean = t << this
 
 }
 
-
 /**
-  * Bottom type
-  *
-  * There should be no instance of Bottom.
-  */
+ * Bottom type
+ *
+ * There should be no instance of Bottom.
+ */
 //trait Bottom extends GraphType { self =>
 case object Bottom extends GraphType {
 
-//  type TypeId = Nothing
-//
-//  type Key = Nothing
+  //  type TypeId = Nothing
+  //
+  //  type Key = Nothing
 
-//  def <<(t: GraphType { type TypeId = self.TypeId; type Key = self.Key }): Boolean = true
-  def <<(t: GraphType): Boolean = true
+  //  def <<(t: GraphType { type TypeId = self.TypeId; type Key = self.Key }): Boolean = true
+  def <<( t: GraphType ): Boolean = true
 
 }
 
@@ -82,9 +81,9 @@ trait RecordType extends GraphType { self =>
 
   def properties: Set[Key]
 
-  final def <<(t: GraphType): Boolean = t match {
-    case RecordType(props) => props subsetOf properties
-    case _ => false
+  final def <<( t: GraphType ): Boolean = t match {
+    case RecordType( props ) => props subsetOf properties
+    case _                   => false
   }
 
 }
@@ -110,15 +109,14 @@ trait NamedType extends GraphType { self =>
 
   def properties: Set[Key]
 
-  def like: RecordType = RecordType(properties)
+  def like: RecordType = RecordType( properties )
 
-  final def <<(t: GraphType): Boolean = t match {
-    case NamedType(tid, _, _) => (superTypes + this.typeId) contains tid
-    case _ => this.like << t
+  final def <<( t: GraphType ): Boolean = t match {
+    case NamedType( tid, _, _ ) => ( superTypes + this.typeId ) contains tid
+    case _                      => this.like << t
   }
 
 }
-
 
 //object Bottom {
 //
@@ -128,26 +126,26 @@ trait NamedType extends GraphType { self =>
 
 object RecordType {
 
-  def apply(properties: Set[RecordType#Key]): RecordType = ImplRecordType(properties)
+  def apply( properties: Set[RecordType#Key] ): RecordType = ImplRecordType( properties )
 
-  def unapply(recordType: RecordType): Option[Set[RecordType#Key]] = {
-    if (recordType eq null)
+  def unapply( recordType: RecordType ): Option[Set[RecordType#Key]] = {
+    if ( recordType eq null )
       None
     else
-      Some(recordType.properties)
+      Some( recordType.properties )
   }
 
 }
 
 object NamedType {
 
-  def apply(typeId: NamedType#TypeId, superTypes: Set[NamedType#TypeId], properties: Set[NamedType#Key]): NamedType = ImplNamedType(typeId, superTypes, properties)
+  def apply( typeId: NamedType#TypeId, superTypes: Set[NamedType#TypeId], properties: Set[NamedType#Key] ): NamedType = ImplNamedType( typeId, superTypes, properties )
 
-  def unapply(namedType: NamedType): Option[(NamedType#TypeId, Set[NamedType#TypeId], Set[NamedType#Key])] = {
-    if (namedType eq null)
+  def unapply( namedType: NamedType ): Option[( NamedType#TypeId, Set[NamedType#TypeId], Set[NamedType#Key] )] = {
+    if ( namedType eq null )
       None
     else
-      Some(namedType.typeId, namedType.superTypes, namedType.properties)
+      Some( namedType.typeId, namedType.superTypes, namedType.properties )
   }
 
 }
