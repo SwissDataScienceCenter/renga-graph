@@ -6,8 +6,8 @@ import play.api.db.slick.HasDatabaseConfig
 import slick.jdbc.JdbcProfile
 
 /**
-  * Created by johann on 07/06/17.
-  */
+ * Created by johann on 07/06/17.
+ */
 trait DatabaseComponent extends HasDatabaseConfig[JdbcProfile] {
 
   protected val dal: DatabaseStack
