@@ -80,9 +80,7 @@
     {
       "key": "resource:file_version",
       "properties": ["system:creation_time"]
-    },
-
-
+    }
   ],
 
   "edge_labels": [
