@@ -6,8 +6,8 @@ import ch.datascience.graph.elements.Vertex
 import ch.datascience.graph.elements.persisted.impl.ImplPersistedVertex
 
 /**
-  * Created by johann on 29/05/17.
-  */
+ * Created by johann on 29/05/17.
+ */
 trait PersistedVertex extends Vertex with PersistedElement with HasId {
 
   final type Id = Constants.VertexId
@@ -16,23 +16,23 @@ trait PersistedVertex extends Vertex with PersistedElement with HasId {
 
   final type Prop = PersistedVertexProperty
 
-  final def path: VertexPath = VertexPath(id)
+  final def path: VertexPath = VertexPath( id )
 
 }
 
 object PersistedVertex {
 
   def apply(
-    id: PersistedVertex#Id,
-    types: Set[PersistedVertex#TypeId],
-    properties: PersistedVertex#Properties
-  ): PersistedVertex = ImplPersistedVertex(id, types, properties)
+      id:         PersistedVertex#Id,
+      types:      Set[PersistedVertex#TypeId],
+      properties: PersistedVertex#Properties
+  ): PersistedVertex = ImplPersistedVertex( id, types, properties )
 
-  def unapply(vertex: PersistedVertex): Option[(PersistedVertex#Id, Set[PersistedVertex#TypeId], PersistedVertex#Properties)] = {
-    if (vertex eq null)
+  def unapply( vertex: PersistedVertex ): Option[( PersistedVertex#Id, Set[PersistedVertex#TypeId], PersistedVertex#Properties )] = {
+    if ( vertex eq null )
       None
     else
-      Some(vertex.id, vertex.types, vertex.properties)
+      Some( vertex.id, vertex.types, vertex.properties )
   }
 
 }
