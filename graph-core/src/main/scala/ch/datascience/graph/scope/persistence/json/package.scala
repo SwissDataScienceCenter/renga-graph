@@ -19,12 +19,12 @@
 package ch.datascience.graph.scope.persistence
 
 import ch.datascience.graph.types.PropertyKey
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.{ Reads, Writes }
 import ch.datascience.graph.naming.json.NamespaceAndNameFormat
 
 /**
-  * Created by johann on 24/05/17.
-  */
+ * Created by johann on 24/05/17.
+ */
 package object json {
 
   implicit lazy val fetchPropertiesForQueryReads: Reads[Set[PropertyKey#Key]] = new FetchPropertiesForQueryReads

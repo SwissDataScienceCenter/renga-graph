@@ -21,9 +21,9 @@ package ch.datascience.graph.types.persistence.relationaldb
 import scala.collection.mutable
 
 /**
-  * Created by johann on 13/04/17.
-  */
-trait SchemasComponent { this : JdbcProfileComponent =>
+ * Created by johann on 13/04/17.
+ */
+trait SchemasComponent { this: JdbcProfileComponent =>
 
   final type Schema = profile.SchemaDescription
 

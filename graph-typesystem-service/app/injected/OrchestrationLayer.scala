@@ -28,18 +28,18 @@ import slick.jdbc.JdbcBackend.Database
 import scala.concurrent.ExecutionContext
 
 /**
-  * Created by johann on 13/04/17.
-  */
-class OrchestrationLayer @Inject()(
-                                    @NamedDatabase("sqldb") protected val dbConfigProvider : DatabaseConfigProvider,
-                                    override protected val dal: DatabaseLayer,
-                                    override protected val gal: GraphLayer,
-                                    override protected val gdb: GraphRunner
-                                  )
+ * Created by johann on 13/04/17.
+ */
+class OrchestrationLayer @Inject() (
+    @NamedDatabase( "sqldb" ) protected val dbConfigProvider:DatabaseConfigProvider,
+    override protected val dal:                             DatabaseLayer,
+    override protected val gal:                             GraphLayer,
+    override protected val gdb:                             GraphRunner
+)
   extends OrchestrationStack(
-    ec = play.api.libs.concurrent.Execution.defaultContext,
+    ec       = play.api.libs.concurrent.Execution.defaultContext,
     dbConfig = dbConfigProvider.get,
-    dal = dal,
-    gdb = gdb,
-    gal = gal
+    dal      = dal,
+    gdb      = gdb,
+    gal      = gal
   )

@@ -22,8 +22,8 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 /**
-  * Created by johann on 07/06/17.
-  */
+ * Created by johann on 07/06/17.
+ */
 //trait DatabaseConfigComponent[Profile <: JdbcProfile] {
 //
 //  protected val dbConfig: DatabaseConfig[Profile]
