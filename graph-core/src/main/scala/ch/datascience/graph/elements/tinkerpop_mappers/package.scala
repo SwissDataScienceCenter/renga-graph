@@ -4,8 +4,8 @@ import ch.datascience.graph.Constants
 import ch.datascience.graph.scope.PropertyScope
 
 /**
-  * Created by johann on 30/05/17.
-  */
+ * Created by johann on 30/05/17.
+ */
 package object tinkerpop_mappers {
 
   lazy val KeyReader: SyncStringReader[Constants.Key] = NamespaceAndNameReader
@@ -13,7 +13,7 @@ package object tinkerpop_mappers {
   lazy val EdgeLabelReader: SyncStringReader[Constants.EdgeLabel] = NamespaceAndNameReader
 
   type ValueReader = KeyValueReader[Constants.Key, Constants.Value]
-  lazy val ValueReader: (PropertyScope) => ValueReader = BoxedReader
+  lazy val ValueReader: ( PropertyScope ) => ValueReader = BoxedReader
 
   lazy val KeyWriter: Writer[Constants.Key, String] = NamespaceAndNameWriter
   lazy val TypeIdWriter: Writer[Constants.TypeId, String] = NamespaceAndNameWriter

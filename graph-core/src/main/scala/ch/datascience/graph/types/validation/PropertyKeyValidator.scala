@@ -6,18 +6,18 @@ import ch.datascience.graph.types.PropertyKey
 import scala.concurrent.Future
 
 /**
-  * Created by johann on 09/05/17.
-  */
+ * Created by johann on 09/05/17.
+ */
 trait PropertyKeyValidator {
 
-  def validatePropertyKey(propertyKey: PropertyKey): Future[ValidationResult[ValidatedPropertyKey]] = {
-    Future.successful( validatePropertyKeySync(propertyKey) )
+  def validatePropertyKey( propertyKey: PropertyKey ): Future[ValidationResult[ValidatedPropertyKey]] = {
+    Future.successful( validatePropertyKeySync( propertyKey ) )
   }
 
-  def validatePropertyKeySync(propertyKey: PropertyKey): ValidationResult[ValidatedPropertyKey] = {
-    Right(Result(propertyKey))
+  def validatePropertyKeySync( propertyKey: PropertyKey ): ValidationResult[ValidatedPropertyKey] = {
+    Right( Result( propertyKey ) )
   }
 
-  private[this] case class Result(propertyKey: PropertyKey) extends ValidatedPropertyKey
+  private[this] case class Result( propertyKey: PropertyKey ) extends ValidatedPropertyKey
 
 }

@@ -5,55 +5,55 @@ import ch.datascience.graph.scope.persistence.PersistedProperties
 
 import scala.collection
 import scala.collection.concurrent
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  * Base trait for scopes that handle property definitions
-  * @tparam Key type of key
-  */
+ * Base trait for scopes that handle property definitions
+ * @tparam Key type of key
+ */
 trait PropertyScope {
 
-  final def getPropertyFor(key: PropertyKey#Key)(implicit ec: ExecutionContext): Future[Option[PropertyKey]] = {
+  final def getPropertyFor( key: PropertyKey#Key )( implicit ec: ExecutionContext ): Future[Option[PropertyKey]] = {
     propertyDefinitions get key match {
-      case Some(propertyKey) => Future.successful( Some(propertyKey) )
+      case Some( propertyKey ) => Future.successful( Some( propertyKey ) )
       case None => {
-        val result = persistedProperties.fetchPropertyFor(key)
+        val result = persistedProperties.fetchPropertyFor( key )
 
         // If we get a property key, then we add it to our scope
-        result.onSuccess({
-          case Some(propertyKey) => propertyDefinitions.put(propertyKey.key, propertyKey)
-        })(ec)
+        result.onSuccess( {
+          case Some( propertyKey ) => propertyDefinitions.put( propertyKey.key, propertyKey )
+        } )( ec )
 
         result
       }
     }
   }
 
-  final def getPropertiesFor(keys: Set[PropertyKey#Key])(implicit ec: ExecutionContext): Future[Map[PropertyKey#Key, PropertyKey]] = {
+  final def getPropertiesFor( keys: Set[PropertyKey#Key] )( implicit ec: ExecutionContext ): Future[Map[PropertyKey#Key, PropertyKey]] = {
     // Locally, sort known keys and unkown keys
-    val tryLocally = (for (key <- keys) yield key -> propertyDefinitions.get(key)).toMap
+    val tryLocally = ( for ( key <- keys ) yield key -> propertyDefinitions.get( key ) ).toMap
     val knownPropertyKeys: Map[PropertyKey#Key, PropertyKey] = for {
-      (key, opt) <- tryLocally
+      ( key, opt ) <- tryLocally
       propertyKey <- opt
     } yield key -> propertyKey
     val unknownKeys: Set[PropertyKey#Key] = for {
       key <- tryLocally.keySet
-      if tryLocally(key).isEmpty
+      if tryLocally( key ).isEmpty
     } yield key
 
     // Resolve unknown keys
-    val resolved = persistedProperties.fetchPropertiesFor(unknownKeys)
+    val resolved = persistedProperties.fetchPropertiesFor( unknownKeys )
 
     // Update resolved keys
-    resolved.map({ definitions =>
-      for (propertyKey <- definitions.values) {
-        propertyDefinitions.put(propertyKey.key, propertyKey)
+    resolved.map( { definitions =>
+      for ( propertyKey <- definitions.values ) {
+        propertyDefinitions.put( propertyKey.key, propertyKey )
       }
-    })(ec)
+    } )( ec )
 
-    resolved.map({ definitions =>
+    resolved.map( { definitions =>
       knownPropertyKeys ++ definitions
-    })(ec)
+    } )( ec )
   }
 
   final def getCachedProperties: Future[collection.Map[PropertyKey#Key, PropertyKey]] = {
