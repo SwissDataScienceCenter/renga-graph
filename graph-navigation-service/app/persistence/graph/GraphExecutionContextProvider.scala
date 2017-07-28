@@ -6,9 +6,9 @@ import ch.datascience.graph.execution.GraphExecutionContext
 import org.apache.tinkerpop.gremlin.structure.Graph
 
 /**
-  * Created by johann on 13/06/17.
-  */
-class GraphExecutionContextProvider @Inject()(protected val janusGraphProvider: JanusGraphProvider) {
+ * Created by johann on 13/06/17.
+ */
+class GraphExecutionContextProvider @Inject() ( protected val janusGraphProvider: JanusGraphProvider ) {
 
   lazy val ctxt: GraphExecutionContext = new GraphExecutionContext {
     protected def graph: Graph = janusGraphProvider.get
