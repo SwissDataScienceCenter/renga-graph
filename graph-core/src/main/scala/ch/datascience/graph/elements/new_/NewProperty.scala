@@ -23,8 +23,8 @@ import ch.datascience.graph.elements.new_.impl.ImplNewLeafProperty
 import ch.datascience.graph.elements.persisted.Path
 
 /**
-  * Created by johann on 29/05/17.
-  */
+ * Created by johann on 29/05/17.
+ */
 trait NewProperty extends Property with NewElement {
 
   def parent: Path
@@ -34,16 +34,16 @@ trait NewProperty extends Property with NewElement {
 object NewProperty {
 
   def apply(
-    parent: Path,
-    key: NewProperty#Key,
-    value: NewProperty#Value
-  ): NewProperty = ImplNewLeafProperty(parent, key, value)
+      parent: Path,
+      key:    NewProperty#Key,
+      value:  NewProperty#Value
+  ): NewProperty = ImplNewLeafProperty( parent, key, value )
 
-  def unapply(prop: NewProperty): Option[(Path, NewProperty#Key, NewProperty#Value)] = {
-    if (prop eq null)
+  def unapply( prop: NewProperty ): Option[( Path, NewProperty#Key, NewProperty#Value )] = {
+    if ( prop eq null )
       None
     else
-      Some(prop.parent, prop.key, prop.value)
+      Some( prop.parent, prop.key, prop.value )
   }
 
 }

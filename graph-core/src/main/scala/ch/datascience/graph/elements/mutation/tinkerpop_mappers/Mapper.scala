@@ -23,8 +23,8 @@ import org.apache.tinkerpop.gremlin.process.traversal.Traversal
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource
 
 /**
-  * Created by johann on 30/05/17.
-  */
+ * Created by johann on 30/05/17.
+ */
 trait Mapper {
 
   type OperationType <: Operation
@@ -32,6 +32,6 @@ trait Mapper {
   type Source
   type Element
 
-  def apply(op: OperationType): (GraphTraversalSource) => Traversal[Source, Element]
+  def apply( op: OperationType ): ( GraphTraversalSource ) => Traversal[Source, Element]
 
 }
