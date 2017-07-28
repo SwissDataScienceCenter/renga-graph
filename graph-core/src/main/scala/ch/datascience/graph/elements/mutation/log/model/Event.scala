@@ -6,6 +6,6 @@ import java.util.UUID
 import play.api.libs.json.JsValue
 
 /**
-  * Created by johann on 07/06/17.
-  */
-case class Event(uuid : UUID, event : JsValue, created : Instant)
+ * Created by johann on 07/06/17.
+ */
+case class Event( uuid: UUID, event: JsValue, created: Instant )

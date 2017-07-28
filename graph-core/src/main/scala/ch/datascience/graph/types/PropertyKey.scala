@@ -31,22 +31,22 @@ trait PropertyKey extends HasKey {
 
 object PropertyKey {
 
-  def apply(key: PropertyKey#Key, dataType: DataType, cardinality: Cardinality): PropertyKey = ImplPropertyKey(key, dataType, cardinality)
+  def apply( key: PropertyKey#Key, dataType: DataType, cardinality: Cardinality ): PropertyKey = ImplPropertyKey( key, dataType, cardinality )
 
-  def unapply(propertyKey: PropertyKey): Option[(propertyKey.Key, DataType, Cardinality)] = {
-    if (propertyKey eq null)
+  def unapply( propertyKey: PropertyKey ): Option[( propertyKey.Key, DataType, Cardinality )] = {
+    if ( propertyKey eq null )
       None
     else
-      Some(propertyKey.key, propertyKey.dataType, propertyKey.cardinality)
+      Some( propertyKey.key, propertyKey.dataType, propertyKey.cardinality )
   }
 
-//  def apply[Key](key: Key, dataType: DataType, cardinality: Cardinality): PropertyKey[Key] = ImplPropertyKey(key, dataType, cardinality)
-//
-//  def unapply[Key](propertyKey: PropertyKey[Key]): Option[(Key, DataType, Cardinality)] = {
-//    if (propertyKey eq null)
-//      None
-//    else
-//      Some(propertyKey.key, propertyKey.dataType, propertyKey.cardinality)
-//  }
+  //  def apply[Key](key: Key, dataType: DataType, cardinality: Cardinality): PropertyKey[Key] = ImplPropertyKey(key, dataType, cardinality)
+  //
+  //  def unapply[Key](propertyKey: PropertyKey[Key]): Option[(Key, DataType, Cardinality)] = {
+  //    if (propertyKey eq null)
+  //      None
+  //    else
+  //      Some(propertyKey.key, propertyKey.dataType, propertyKey.cardinality)
+  //  }
 
 }
