@@ -105,7 +105,11 @@
       "multiplicity": "simple"
     },
     {
-      "key": "resource:has_alias",
+      "key": "resource:has_location",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:version_of",
       "multiplicity": "simple"
     },
     {
