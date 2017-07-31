@@ -52,6 +52,11 @@
       "key": "resource:file_name",
       "data_type": "string",
       "cardinality": "single"
+    },
+    {
+      "key": "resource:path",
+      "data_type": "string",
+      "cardinality": "single"
     }
   ],
 
@@ -67,6 +72,14 @@
     {
       "key": "resource:bucket",
       "properties": ["resource:bucket_backend_id", "resource:bucket_name", "resource:bucket_backend"]
+    },
+    {
+      "key": "resource:file_location",
+      "properties": ["resource:path"]
+    },
+    {
+      "key": "resource:file_version",
+      "properties": ["system:creation_time"]
     }
   ],
 
@@ -89,6 +102,18 @@
     },
     {
       "key": "resource:stored_in",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:has_location",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:version_of",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:has_version",
       "multiplicity": "simple"
     }
   ]
