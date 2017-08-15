@@ -1,27 +1,30 @@
-organization := "ch.datascience"
-name := "graph-core"
-version := "0.1.0-SNAPSHOT"
-scalaVersion := "2.11.8"
+lazy val commonSettings = Seq(
+  organization := "ch.datascience",
+  version := "0.1.0-SNAPSHOT",
+  scalaVersion := "2.11.8"
+)
 
-resolvers += DefaultMavenRepository
+//lazy val projectName = "renga-graph"
+name := "renga-graph"
 
-lazy val play_version = "2.5.14"
-lazy val tinkerpop_version = "3.2.3"
+lazy val root = (project in file("."))
+  .settings(
+    commonSettings,
+    scalariform2342342Preferences
+  )
 
-libraryDependencies += "com.typesafe.play" %% "play-json" % play_version
-libraryDependencies += "com.typesafe.play" %% "play-ws" % play_version
-libraryDependencies += "org.apache.tinkerpop" % "gremlin-core" % tinkerpop_version
-
-lazy val scalatest_version = "3.0.1"
-
-libraryDependencies += "org.scalatest" %% "scalatest" % scalatest_version % Test
+lazy val core = (project in file("core"))
+  .settings(
+    commonSettings,
+    scalariform2342342Preferences
+  )
 
 // Source code formatting
 import scalariform.formatter.preferences._
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
-val preferences =
+val scalariform2342342Preferences =
   ScalariformKeys.preferences := ScalariformKeys.preferences.value
     .setPreference( AlignArguments,                               true  )
     .setPreference( AlignParameters,                              true  )
@@ -50,4 +53,4 @@ val preferences =
     .setPreference( SpacesAroundMultiImports,                     true  )
     .setPreference( SpacesWithinPatternBinders,                   false )
 
-SbtScalariform.scalariformSettings ++ Seq(preferences)
+SbtScalariform.scalariformSettings ++ Seq(scalariform2342342Preferences)
