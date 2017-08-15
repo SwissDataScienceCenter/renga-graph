@@ -1,0 +1,120 @@
+{
+  "system_property_keys": [
+    {
+      "name": "type",
+      "data_type": "string",
+      "cardinality": "set"
+    }
+  ],
+
+  "property_keys": [
+    {
+      "key": "system:creation_time",
+      "data_type": "long",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:deployer_id",
+      "data_type": "uuid",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:backend_id",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:description",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:status",
+      "data_type": "string",
+      "cardinality": "set"
+    },
+    {
+      "key": "resource:bucket_name",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "resource:bucket_backend_id",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "resource:bucket_backend",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "resource:file_name",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "resource:path",
+      "data_type": "string",
+      "cardinality": "single"
+    }
+  ],
+
+  "named_types": [
+    {
+      "key": "deploy:deployment",
+      "properties": ["deploy:deployer_id", "deploy:description", "deploy:status"]
+    },
+    {
+      "key": "resource:file",
+      "properties": ["resource:file_name"]
+    },
+    {
+      "key": "resource:bucket",
+      "properties": ["resource:bucket_backend_id", "resource:bucket_name", "resource:bucket_backend"]
+    },
+    {
+      "key": "resource:file_location",
+      "properties": ["resource:path"]
+    },
+    {
+      "key": "resource:file_version",
+      "properties": ["system:creation_time"]
+    }
+  ],
+
+  "edge_labels": [
+    {
+      "key": "deploy:subprocess",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:read",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:write",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:create",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:stored_in",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:has_location",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:version_of",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:has_version",
+      "multiplicity": "simple"
+    }
+  ]
+}
