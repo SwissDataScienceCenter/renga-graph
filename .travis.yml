@@ -1,3 +1,5 @@
+sudo: true
+dist: trusty
 branches:
   only:
   - master
