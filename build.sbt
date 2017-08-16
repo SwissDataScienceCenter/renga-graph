@@ -54,6 +54,16 @@ lazy val init = (project in file("init"))
     JavaAppPackaging
   )
 
+lazy val `navigation-service` = (project in file("navigation/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core
+  ).enablePlugins(
+    PlayScala
+  )
+
 lazy val `typesystem-implementation` = (project in file("typesystem/implementation"))
   .settings(
     commonSettings,
