@@ -1,56 +1,99 @@
-organization := "ch.datascience"
-name := "graph-navigation-service"
-version := "0.1.0-SNAPSHOT"
-scalaVersion := "2.11.8"
+lazy val commonSettings = Seq(
+  organization := "ch.datascience",
+  version := "0.1.0-SNAPSHOT",
+  scalaVersion := "2.11.8"
+)
 
-lazy val root = Project(
-  id   = "graph-navigation-service",
-  base = file(".")
-).dependsOn(
+//lazy val projectName = "renga-graph"
+name := "renga-graph"
+
+// This project contains nothing to package, like pure POM maven project
+packagedArtifacts := Map.empty
+
+lazy val root = (project in file("."))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).aggregate(
+    core,
+    `typesystem-implementation`
+  )
+
+lazy val core = (project in file("core"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  )
+
+lazy val init = (project in file("init"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core,
+    `typesystem-implementation`
+  ).enablePlugins(
+    JavaAppPackaging
+  )
+
+lazy val `mutation-implementation` = (project in file("mutation/implementation"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
   core
+)
+
+lazy val `mutation-service` = (project in file("mutation/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences,
+    projectDependencies +=
+      (projectID in `mutation-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+  ).dependsOn(
+  core,
+  `mutation-implementation`
 ).enablePlugins(
   PlayScala
 )
 
-lazy val core = RootProject(file("../graph-core"))
+lazy val `navigation-service` = (project in file("navigation/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core
+  ).enablePlugins(
+    PlayScala
+  )
 
-resolvers += DefaultMavenRepository
-resolvers += "jitpack" at "https://jitpack.io"
-resolvers += "Oracle Released Java Packages" at "http://download.oracle.com/maven"
+lazy val `typesystem-implementation` = (project in file("typesystem/implementation"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core
+  )
 
-lazy val play_slick_version = "2.1.0"
-
-libraryDependencies += filters
-libraryDependencies += cache
-libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
-
-lazy val scalatestplus_play_version = "2.0.0"
-
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % scalatestplus_play_version % Test
-
-lazy val janusgraph_version = "0.1.0"
-
-libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version //% Runtime
-
-import com.typesafe.sbt.packager.docker._
-
-dockerBaseImage := "openjdk:8-jre-alpine"
-
-dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
-// Replace entry point
-dockerCommands ~= { cmds =>
-  cmds.map {
-    case ExecCmd("ENTRYPOINT", args@_*) => ExecCmd("ENTRYPOINT", args ++ Seq("-Dconfig.resource=application.docker.conf"): _*)
-    case cmd => cmd
-  }
-}
+lazy val `typesystem-service` = (project in file("typesystem/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences,
+    projectDependencies +=
+      (projectID in `typesystem-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+  ).dependsOn(
+    core,
+    `typesystem-implementation`
+  ).enablePlugins(
+    PlayScala
+  )
 
 // Source code formatting
 import scalariform.formatter.preferences._
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
-val preferences =
+val ourScalariformPreferences =
   ScalariformKeys.preferences := ScalariformKeys.preferences.value
     .setPreference( AlignArguments,                               true  )
     .setPreference( AlignParameters,                              true  )
@@ -79,4 +122,4 @@ val preferences =
     .setPreference( SpacesAroundMultiImports,                     true  )
     .setPreference( SpacesWithinPatternBinders,                   false )
 
-SbtScalariform.scalariformSettings ++ Seq(preferences)
+SbtScalariform.scalariformSettings ++ Seq(ourScalariformPreferences)
