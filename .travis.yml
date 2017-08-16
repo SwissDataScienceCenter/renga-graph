@@ -14,6 +14,11 @@ matrix:
   - env: COMPONENT=navigation-service
   - env: COMPONENT=typesystem-implementation
   - env: COMPONENT=typesystem-service
+  - env: COMPONENT=init
+    sudo: true
+    script:
+    - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
+    - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" docker:publishLocal
 
 # caching suggestions from http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
 cache:
