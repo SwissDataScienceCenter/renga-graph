@@ -1,0 +1,26 @@
+branches:
+  only:
+  - master
+language: scala
+scala:
+- '2.11.8'
+script: sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" test && bash ./.travis/check-code-formatting.sh
+matrix:
+  include:
+  - env: COMPONENT=core
+  - env: COMPONENT=init
+  - env: COMPONENT=mutation-implementation
+  - env: COMPONENT=mutation-service
+  - env: COMPONENT=navigation-service
+  - env: COMPONENT=typesystem-implementation
+  - env: COMPONENT=typesystem-service
+
+# caching suggestions from http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
+before_cache:
+  # Cleanup the cached directories to avoid unnecessary cache updates
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+  - find $HOME/.sbt        -name "*.lock"               -print -delete

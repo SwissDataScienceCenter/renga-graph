@@ -16,47 +16,102 @@
  * limitations under the License.
  */
 
-organization := "ch.datascience"
-name := "graph-mutation-worker"
-version := "0.1.0-SNAPSHOT"
-scalaVersion := "2.11.8"
+lazy val commonSettings = Seq(
+  organization := "ch.datascience",
+  version := "0.1.0-SNAPSHOT",
+  scalaVersion := "2.11.8"
+)
 
-lazy val root = Project(
-  id   = "graph-mutation-worker",
-  base = file(".")
-).dependsOn(
+//lazy val projectName = "renga-graph"
+name := "renga-graph"
+
+// This project contains nothing to package, like pure POM maven project
+packagedArtifacts := Map.empty
+
+lazy val root = (project in file("."))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).aggregate(
+    core,
+    `typesystem-implementation`
+  )
+
+lazy val core = (project in file("core"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  )
+
+lazy val init = (project in file("init"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core,
+    `typesystem-implementation`
+  ).enablePlugins(
+    JavaAppPackaging
+  )
+
+lazy val `mutation-implementation` = (project in file("mutation/implementation"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
   core
 )
 
-lazy val core = RootProject(file("../graph-core"))
+lazy val `mutation-service` = (project in file("mutation/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences,
+    projectDependencies +=
+      (projectID in `mutation-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+  ).dependsOn(
+  core,
+  `mutation-implementation`
+).enablePlugins(
+  PlayScala
+)
 
-resolvers += DefaultMavenRepository
-resolvers += "jitpack" at "https://jitpack.io"
-resolvers += "Oracle Released Java Packages" at "http://download.oracle.com/maven"
+lazy val `navigation-service` = (project in file("navigation/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core
+  ).enablePlugins(
+    PlayScala
+  )
 
-lazy val slick_version = "3.2.0"
-lazy val play_slick_version = "2.1.0"
-lazy val janusgraph_version = "0.1.0"
+lazy val `typesystem-implementation` = (project in file("typesystem/implementation"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core
+  )
 
-libraryDependencies += "com.typesafe.slick" %% "slick" % slick_version
-libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
-libraryDependencies += "org.janusgraph" % "janusgraph-core" % janusgraph_version
-
-lazy val h2_version = "1.4.193"
-lazy val scalatest_version = "3.0.1"
-
-libraryDependencies += "com.h2database" % "h2" % h2_version % Test
-libraryDependencies += "org.scalatest" %% "scalatest" % scalatest_version % Test
-
-logBuffered in Test := false
-parallelExecution in Test := false
+lazy val `typesystem-service` = (project in file("typesystem/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences,
+    projectDependencies +=
+      (projectID in `typesystem-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+  ).dependsOn(
+    core,
+    `typesystem-implementation`
+  ).enablePlugins(
+    PlayScala
+  )
 
 // Source code formatting
 import scalariform.formatter.preferences._
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
-val preferences =
+val ourScalariformPreferences =
   ScalariformKeys.preferences := ScalariformKeys.preferences.value
     .setPreference( AlignArguments,                               true  )
     .setPreference( AlignParameters,                              true  )
@@ -85,4 +140,4 @@ val preferences =
     .setPreference( SpacesAroundMultiImports,                     true  )
     .setPreference( SpacesWithinPatternBinders,                   false )
 
-SbtScalariform.scalariformSettings ++ Seq(preferences)
+SbtScalariform.scalariformSettings ++ Seq(ourScalariformPreferences)
