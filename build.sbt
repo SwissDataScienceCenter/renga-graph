@@ -10,13 +10,13 @@ name := "renga-graph"
 lazy val root = (project in file("."))
   .settings(
     commonSettings,
-    scalariform2342342Preferences
+    ourScalariformPreferences
   )
 
 lazy val core = (project in file("core"))
   .settings(
     commonSettings,
-    scalariform2342342Preferences
+    ourScalariformPreferences
   )
 
 // Source code formatting
@@ -24,7 +24,7 @@ import scalariform.formatter.preferences._
 import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
-val scalariform2342342Preferences =
+val ourScalariformPreferences =
   ScalariformKeys.preferences := ScalariformKeys.preferences.value
     .setPreference( AlignArguments,                               true  )
     .setPreference( AlignParameters,                              true  )
@@ -53,4 +53,4 @@ val scalariform2342342Preferences =
     .setPreference( SpacesAroundMultiImports,                     true  )
     .setPreference( SpacesWithinPatternBinders,                   false )
 
-SbtScalariform.scalariformSettings ++ Seq(scalariform2342342Preferences)
+SbtScalariform.scalariformSettings ++ Seq(ourScalariformPreferences)
