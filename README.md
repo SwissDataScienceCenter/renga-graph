@@ -1,2 +1,2 @@
-# fantastic-guacamole
-All things platform
+# renga-graph
+Renga Knowledge Graph and related packages
