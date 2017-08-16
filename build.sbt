@@ -54,6 +54,27 @@ lazy val init = (project in file("init"))
     JavaAppPackaging
   )
 
+lazy val `mutation-implementation` = (project in file("mutation/implementation"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+  core
+)
+
+lazy val `mutation-service` = (project in file("mutation/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences,
+    projectDependencies +=
+      (projectID in `mutation-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+  ).dependsOn(
+  core,
+  `mutation-implementation`
+).enablePlugins(
+  PlayScala
+)
+
 lazy val `navigation-service` = (project in file("navigation/service"))
   .settings(
     commonSettings,
