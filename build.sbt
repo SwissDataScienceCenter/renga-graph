@@ -11,12 +11,36 @@ lazy val root = (project in file("."))
   .settings(
     commonSettings,
     ourScalariformPreferences
+  ).aggregate(
+    core,
+    `typesystem-implementation`
   )
 
 lazy val core = (project in file("core"))
   .settings(
     commonSettings,
     ourScalariformPreferences
+  )
+
+lazy val `typesystem-implementation` = (project in file("typesystem/implementation"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core
+  )
+
+lazy val `typesystem-service` = (project in file("typesystem/service"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences,
+    projectDependencies +=
+      (projectID in `typesystem-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+  ).dependsOn(
+    core,
+    `typesystem-implementation`
+  ).enablePlugins(
+    PlayScala
   )
 
 // Source code formatting
