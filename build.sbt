@@ -25,6 +25,9 @@ lazy val commonSettings = Seq(
 //lazy val projectName = "renga-graph"
 name := "renga-graph"
 
+// This project contains nothing to package, like pure POM maven project
+packagedArtifacts := Map.empty
+
 lazy val root = (project in file("."))
   .settings(
     commonSettings,
@@ -38,6 +41,17 @@ lazy val core = (project in file("core"))
   .settings(
     commonSettings,
     ourScalariformPreferences
+  )
+
+lazy val init = (project in file("init"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+    core,
+    `typesystem-implementation`
+  ).enablePlugins(
+    JavaAppPackaging
   )
 
 lazy val `typesystem-implementation` = (project in file("typesystem/implementation"))
