@@ -18,18 +18,26 @@
 
 package ch.datascience.graph.scope.persistence.dummy
 
-import ch.datascience.graph.types.PropertyKey
-import ch.datascience.graph.scope.persistence.PersistedProperties
+import ch.datascience.graph.scope.Scope
+import ch.datascience.graph.types.{ NamedType, PropertyKey }
 
-import scala.concurrent.{ ExecutionContext, Future }
+class DummyScope( override protected val persistenceLayer: DummyPersistenceLayer )
+  extends Scope( persistenceLayer ) {
 
-/**
- * Created by johann on 08/05/17.
- */
-trait DummyPersistedProperties extends PersistedProperties {
+  def addPropertyDefinitions( definitions: Iterable[( PropertyKey#Key, PropertyKey )] ): this.type = {
+    for ( ( key, propertyKey ) <- definitions ) {
+      this.propertyDefinitions.put( key, propertyKey )
+    }
 
-  def fetchPropertyFor( key: PropertyKey#Key ): Future[Option[PropertyKey]] = Future.successful( None )
+    this
+  }
 
-  def fetchPropertiesFor( keys: Set[PropertyKey#Key] ): Future[Map[PropertyKey#Key, PropertyKey]] = Future.successful( Map.empty )
+  def addNamedTypeDefinitions( definitions: Iterable[( NamedType#TypeId, NamedType )] ): this.type = {
+    for ( ( key, namedType ) <- definitions ) {
+      this.namedTypeDefinitions.put( key, namedType )
+    }
+
+    this
+  }
 
 }
