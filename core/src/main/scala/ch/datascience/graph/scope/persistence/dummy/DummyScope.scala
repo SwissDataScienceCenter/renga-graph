@@ -3,8 +3,7 @@ package ch.datascience.graph.scope.persistence.dummy
 import ch.datascience.graph.scope.Scope
 import ch.datascience.graph.types.{ NamedType, PropertyKey }
 
-class DummyScope( override protected val persistenceLayer: DummyPersistenceLayer )
-  extends Scope( persistenceLayer ) {
+trait DummyScope extends Scope {
 
   def addPropertyDefinitions( definitions: Iterable[( PropertyKey#Key, PropertyKey )] ): this.type = {
     for ( ( key, propertyKey ) <- definitions ) {
