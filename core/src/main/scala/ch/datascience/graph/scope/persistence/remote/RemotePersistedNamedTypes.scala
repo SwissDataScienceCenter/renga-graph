@@ -40,7 +40,7 @@ trait RemotePersistedNamedTypes extends PersistedNamedTypes {
    * @param typeId
    * @return a future containing some named type if a corresponding one is found, None otherwise
    */
-  final def fetchNamedTypeFor( typeId: NamedType#TypeId ): Future[Option[NamedType]] = {
+  def fetchNamedTypeFor( typeId: NamedType#TypeId ): Future[Option[NamedType]] = {
     for {
       response <- client.fetchNamedTypeForRemoteCall( typeId )
     } yield response.status match {
@@ -63,7 +63,7 @@ trait RemotePersistedNamedTypes extends PersistedNamedTypes {
    * @param typeIds set of keys to retrieve
    * @return map key -> named type, will not contain unknown keys
    */
-  final def fetchNamedTypesFor( typeIds: Set[NamedType#TypeId] ): Future[Map[NamedType#TypeId, NamedType]] = {
+  def fetchNamedTypesFor( typeIds: Set[NamedType#TypeId] ): Future[Map[NamedType#TypeId, NamedType]] = {
     for {
       response <- client.fetchNamedTypesForRemoteCall( typeIds )
     } yield response.status match {

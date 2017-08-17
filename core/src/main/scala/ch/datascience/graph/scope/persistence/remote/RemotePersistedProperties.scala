@@ -39,7 +39,7 @@ trait RemotePersistedProperties extends PersistedProperties {
    * @param key
    * @return a future containing some property key if a corresponding one is found, None otherwise
    */
-  final def fetchPropertyFor( key: PropertyKey#Key ): Future[Option[PropertyKey]] = {
+  def fetchPropertyFor( key: PropertyKey#Key ): Future[Option[PropertyKey]] = {
     for {
       response <- client.fetchPropertyForRemoteCall( key )
     } yield response.status match {
@@ -62,7 +62,7 @@ trait RemotePersistedProperties extends PersistedProperties {
    * @param keys set of keys to retrieve
    * @return map key -> property key, will not contain unknown keys
    */
-  final def fetchPropertiesFor( keys: Set[PropertyKey#Key] ): Future[Map[PropertyKey#Key, PropertyKey]] = {
+  def fetchPropertiesFor( keys: Set[PropertyKey#Key] ): Future[Map[PropertyKey#Key, PropertyKey]] = {
     for {
       response <- client.fetchPropertiesForRemoteCall( keys )
     } yield response.status match {
