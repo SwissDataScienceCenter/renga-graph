@@ -57,6 +57,36 @@
       "key": "resource:path",
       "data_type": "string",
       "cardinality": "single"
+    },
+    {
+      "key": "deployer:context_id",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deployer:context_spec_image",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deployer:context_spec_ports",
+      "data_type": "string",
+      "cardinality": "set"
+    },
+    {
+      "key": "deployer:execution_id",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deployer:execution_engine",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deployer:execution_namespace",
+      "data_type": "string",
+      "cardinality": "single"
     }
   ],
 
@@ -80,6 +110,14 @@
     {
       "key": "resource:file_version",
       "properties": ["system:creation_time"]
+    },
+    {
+      "key": "deployer:context",
+      "properties": ["deployer:context_id", "deployer:context_spec_image", "deployer:context_spec_ports"]
+    },
+    {
+      "key": "deployer:execution",
+      "properties": ["deployer:execution_id", "deployer:execution_engine", "deployer:execution_namespace"]
     }
   ],
 
@@ -114,6 +152,10 @@
     },
     {
       "key": "resource:has_version",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "deployer:launch",
       "multiplicity": "simple"
     }
   ]
