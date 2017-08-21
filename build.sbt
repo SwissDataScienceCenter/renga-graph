@@ -20,7 +20,7 @@ lazy val commonSettings = Seq(
   organization := "ch.datascience",
   version := "0.1.0-SNAPSHOT",
   scalaVersion := "2.11.8"
-)
+) ++ publishSettings
 
 //lazy val projectName = "renga-graph"
 name := "renga-graph"
@@ -34,7 +34,12 @@ lazy val root = (project in file("."))
     ourScalariformPreferences
   ).aggregate(
     core,
-    `typesystem-implementation`
+    init,
+    `mutation-implementation`,
+    `mutation-service`,
+    `navigation-service`,
+    `typesystem-implementation`,
+    `typesystem-service`
   )
 
 lazy val core = (project in file("core"))
@@ -141,3 +146,15 @@ val ourScalariformPreferences =
     .setPreference( SpacesWithinPatternBinders,                   false )
 
 SbtScalariform.scalariformSettings ++ Seq(ourScalariformPreferences)
+
+// Publishing
+lazy val publishSettings = Seq(
+  publishTo := {
+    val nexus = "https://testing.datascience.ch:18081/"
+    if (isSnapshot.value)
+      Some("snapshots" at nexus + "repository/maven-snapshots/")
+    else
+      None //TODO
+  },
+  credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+)

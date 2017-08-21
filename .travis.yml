@@ -4,7 +4,9 @@ branches:
 language: scala
 scala:
 - '2.11.8'
-script: sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" test && bash ./.travis/check-code-formatting.sh
+script:
+- sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" test && bash ./.travis/check-code-formatting.sh
+- bash ./.travis/make-nexus-credentials.sh && sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" publish
 matrix:
   include:
   - env: COMPONENT=core
