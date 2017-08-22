@@ -7,7 +7,6 @@ scala:
 before_script: bash ./.travis/make-nexus-credentials.sh
 script:
 - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" test && bash ./.travis/check-code-formatting.sh
-# - bash ./.travis/make-nexus-credentials.sh && sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" publish
 deploy:
 - provider: script
   skip_cleanup: true
@@ -18,39 +17,15 @@ matrix:
   include:
   - env: COMPONENT=core
   - env: COMPONENT=init
+    sudo: true
   - env: COMPONENT=mutation-implementation
   - env: COMPONENT=mutation-service
+    sudo: true
   - env: COMPONENT=navigation-service
+    sudo: true
   - env: COMPONENT=typesystem-implementation
   - env: COMPONENT=typesystem-service
-  # - env: COMPONENT=init TASK=DOCKER
-  #   sudo: true
-  #   script:
-  #   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
-  #   - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" docker:publishLocal
-  #   - docker tag renga-graph-$COMPONENT:0.1.0-SNAPSHOT $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
-  #   - docker push $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
-  # - env: COMPONENT=mutation-service TASK=DOCKER
-  #   sudo: true
-  #   script:
-  #   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
-  #   - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" docker:publishLocal
-  #   - docker tag renga-graph-$COMPONENT:0.1.0-SNAPSHOT $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
-  #   - docker push $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
-  # - env: COMPONENT=navigation-service TASK=DOCKER
-  #   sudo: true
-  #   script:
-  #   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
-  #   - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" docker:publishLocal
-  #   - docker tag renga-graph-$COMPONENT:0.1.0-SNAPSHOT $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
-  #   - docker push $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
-  # - env: COMPONENT=typesystem-service TASK=DOCKER
-  #   sudo: true
-  #   script:
-  #   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
-  #   - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" docker:publishLocal
-  #   - docker tag renga-graph-$COMPONENT:0.1.0-SNAPSHOT $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
-  #   - docker push $DOCKER_REGISTRY/swissdatasciencecenter/images/renga-graph-$COMPONENT:0.1.0-SNAPSHOT
+    sudo: true
 
 # caching suggestions from http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
 cache:
