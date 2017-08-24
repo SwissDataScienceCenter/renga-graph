@@ -40,6 +40,8 @@ lazy val janusgraph_version = "0.1.0"
 
 libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version //% Runtime
 
+libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.8.9"
+
 import com.typesafe.sbt.packager.docker._
 
 dockerBaseImage := "openjdk:8-jre-alpine"
