@@ -1,0 +1,248 @@
+# API spec in YAML
+swagger: '2.0'
+info:
+  title: Graph Mutation API
+  description: |
+    Graph Mutation API specification
+  version: '0.0.1'
+# Host and schemes are injected by the service
+# will be prefixed to all paths
+basePath: /api/mutation
+produces:
+- application/json
+consumes:
+- application/json
+tags:
+- name: 'Mutation'
+  description: 'Perform mutation operations'
+paths:
+  /mutation:
+    post:
+      tags:
+      - 'Mutation'
+      summary: 'Send a mutation request'
+      parameters:
+      - name: body
+        in: body
+        description: Mutation Request
+        required: true
+        schema:
+          $ref: '#/definitions/Mutation'
+      responses:
+        200:
+          description: 'Received mutation request'
+          schema:
+            $ref: '#/definitions/RequestEvent'
+  /mutation/{mutation-uuid}:
+    get:
+      tags:
+      - 'Mutation'
+      summary: 'Get mutation status'
+      parameters:
+      - name: 'mutation-uuid'
+        in: 'path'
+        description: 'the uuid representing the graph mutation'
+        type: 'string'
+        required: true
+      responses:
+        200:
+          description: 'Status'
+          schema:
+            $ref: '#/definitions/EventStatus'
+definitions:
+  Mutation:
+    title: 'Mutation'
+    type: object
+    required:
+    - operations
+    properties:
+      operations:
+        type: array
+        items:
+          $ref: '#/definitions/Operation'
+        minItems: 1
+    example:
+      operations:
+      - $ref: '#/definitions/CreateVertexOperation/example'
+      - $ref: '#/definitions/CreateEdgeOperation/example'
+      - $ref: '#/definitions/CreateVertexPropertyOperation/example'
+  Operation:
+    title: 'Operation'
+    type: object
+    discriminator: 'type'
+    required:
+    - 'type'
+    properties:
+      type:
+        type: string
+        enum:
+        - 'create_vertex'
+        - 'create_edge'
+        - 'create_vertex_property'
+        - 'update_vertex_property'
+  CreateVertexOperation:
+    title: 'CreateVertexOperation'
+    type: object
+    required:
+    - 'type'
+    - 'element'
+    properties:
+      type:
+        type: string
+        enum:
+        - 'create_vertex'
+      element:
+        type: object
+        # TODO: define NewVertex
+    example:
+      type: 'create_vertex'
+      element:
+        temp_id: 0
+        types:
+        - 'resource:bucket'
+        properties:
+        - key: 'resource:bucket_backend'
+          data_type: 'string'
+          cardinality: 'single'
+          values:
+          - key: 'resource:bucket_backend'
+            data_type: 'string'
+            value: 'local'
+            properties:
+            - key: 'resource:creation_time'
+              data_type: 'long'
+              value: 1501138750482
+        - key: 'resource:bucket_name'
+          data_type: 'string'
+          cardinality: 'single'
+          values:
+          - key: 'resource:bucket_name'
+            data_type: 'string'
+            value: 'my_bucket'
+            properties: []
+  CreateEdgeOperation:
+    title: 'CreateEdgeOperation'
+    type: object
+    required:
+    - 'type'
+    - 'element'
+    properties:
+      type:
+        type: string
+        enum:
+        - 'create_edge'
+      element:
+        type: object
+        # TODO: define NewEdge
+    example:
+      type: 'create_edge'
+      element:
+        label: 'deploy:subprocess'
+        from:
+          type: 'new_vertex'
+          id: 0
+        to:
+          type: 'persisted_vertex'
+          id: 4321
+        properties:
+        - key: 'system:creation_time'
+          data_type: 'long'
+          value: 1502863673203
+  CreateVertexPropertyOperation:
+    title: 'CreateVertexPropertyOperation'
+    type: object
+    required:
+    - 'type'
+    - 'element'
+    properties:
+      type:
+        type: string
+        enum:
+        - 'create_vertex_property'
+      element:
+        type: object
+        # TODO: define NewRichProperty
+    example:
+      type: 'create_vertex_property'
+      element:
+        parent:
+          type: vertex'
+          id: 4321
+        key: 'deploy:status'
+        data_type: 'string'
+        value: 'created'
+        properties:
+        - key: 'system:creation_time'
+          data_type: 'long'
+          value: 1502863341025
+  RequestEvent:
+    type: object
+    title: 'RequestEvent'
+    required:
+    - 'uuid'
+    - 'event'
+    - 'timestamp'
+    properties:
+      uuid:
+        type: string
+      event:
+        type: object
+        required:
+        - query
+        properties:
+          query:
+            $ref: '#/definitions/Mutation'
+      timestamp:
+        type: 'string'
+        format: 'dateTime'
+  ResponseEvent:
+    type: object
+    title: 'ResponseEvent'
+    required:
+    - 'uuid'
+    - 'event'
+    - 'timestamp'
+    properties:
+      uuid:
+        type: string
+      event:
+        type: object
+        required:
+        - status
+        properties:
+          status:
+            type: 'string'
+            enum:
+            - 'success'
+            - 'failed'
+          results:
+            type: array
+            description: 'If status = sucess, array of resulting graph ids, in the same order as the request'
+            items:
+              type: object
+              required: id
+              properties:
+                id:
+                  description: 'id of processed object'
+          reason:
+            type: string
+            description: 'If status = failed, error message'
+      timestamp:
+        type: 'string'
+        format: 'dateTime'
+  EventStatus:
+    type: 'object'
+    title: 'EventStatus'
+    required:
+    - 'request'
+    - 'status'
+    properties:
+      request:
+        $ref: '#/definitions/RequestEvent'
+      status:
+        type: 'string'
+        enum:
+        - 'pending'
+        - 'completed'
+      response:
+        $ref: '#/definitions/ResponseEvent'
