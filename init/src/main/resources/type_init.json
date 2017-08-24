@@ -14,29 +14,9 @@
       "cardinality": "single"
     },
     {
-        "key": "system:owner",
-        "data_type": "string",
-        "cardinality": "single"
-    },
-    {
-      "key": "deploy:deployer_id",
-      "data_type": "uuid",
-      "cardinality": "single"
-    },
-    {
-      "key": "deploy:backend_id",
+      "key": "system:owner",
       "data_type": "string",
       "cardinality": "single"
-    },
-    {
-      "key": "deploy:description",
-      "data_type": "string",
-      "cardinality": "single"
-    },
-    {
-      "key": "deploy:status",
-      "data_type": "string",
-      "cardinality": "set"
     },
     {
       "key": "resource:bucket_name",
@@ -92,14 +72,15 @@
       "key": "deployer:execution_namespace",
       "data_type": "string",
       "cardinality": "single"
+    },
+    {
+      "key": "project:project_name",
+      "data_type": "string",
+      "cardinality": "single"
     }
   ],
 
   "named_types": [
-    {
-      "key": "deploy:deployment",
-      "properties": ["deploy:deployer_id", "deploy:description", "deploy:status"]
-    },
     {
       "key": "resource:file",
       "properties": ["resource:file_name"]
@@ -123,14 +104,14 @@
     {
       "key": "deployer:execution",
       "properties": ["deployer:execution_id", "deployer:execution_engine", "deployer:execution_namespace"]
+    },
+    {
+      "key": "project:project",
+      "properties": ["project:project_name"]
     }
   ],
 
   "edge_labels": [
-    {
-      "key": "deploy:subprocess",
-      "multiplicity": "simple"
-    },
     {
       "key": "resource:read",
       "multiplicity": "simple"
@@ -161,6 +142,10 @@
     },
     {
       "key": "deployer:launch",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "project:is_part_of",
       "multiplicity": "simple"
     }
   ]
