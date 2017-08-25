@@ -14,9 +14,9 @@
       "cardinality": "single"
     },
     {
-      "key": "system:owner",
+      "key": "resource:owner",
       "data_type": "string",
-      "cardinality": "single"
+      "cardinality": "set"
     },
     {
       "key": "resource:bucket_name",
@@ -146,6 +146,10 @@
     },
     {
       "key": "project:is_part_of",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "project:imported_by",
       "multiplicity": "simple"
     }
   ]
