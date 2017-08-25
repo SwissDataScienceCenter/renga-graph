@@ -149,7 +149,7 @@
       "multiplicity": "simple"
     },
     {
-      "key": "project:imported_by",
+      "key": "project:used_by",
       "multiplicity": "simple"
     }
   ]
