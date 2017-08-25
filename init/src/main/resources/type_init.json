@@ -14,6 +14,11 @@
       "cardinality": "single"
     },
     {
+        "key": "system:owner",
+        "data_type": "string",
+        "cardinality": "single"
+    },
+    {
       "key": "deploy:deployer_id",
       "data_type": "uuid",
       "cardinality": "single"

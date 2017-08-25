@@ -64,8 +64,8 @@ lazy val `mutation-implementation` = (project in file("mutation/implementation")
     commonSettings,
     ourScalariformPreferences
   ).dependsOn(
-  core
-)
+    core
+  )
 
 lazy val `mutation-service` = (project in file("mutation/service"))
   .settings(
