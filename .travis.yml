@@ -4,7 +4,6 @@ branches:
 language: scala
 scala:
 - '2.11.8'
-env: DOCKER_PUSH_LATEST=true
 before_script: bash ./.travis/make-nexus-credentials.sh
 script:
 - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" test && bash ./.travis/check-code-formatting.sh
@@ -22,15 +21,15 @@ deploy:
 matrix:
   include:
   - env: COMPONENT=core
-  - env: COMPONENT=init
+  - env: COMPONENT=init DOCKER_PUSH_LATEST=true
     sudo: true
   - env: COMPONENT=mutation-implementation
-  - env: COMPONENT=mutation-service
+  - env: COMPONENT=mutation-service DOCKER_PUSH_LATEST=true
     sudo: true
-  - env: COMPONENT=navigation-service
+  - env: COMPONENT=navigation-service DOCKER_PUSH_LATEST=true
     sudo: true
   - env: COMPONENT=typesystem-implementation
-  - env: COMPONENT=typesystem-service
+  - env: COMPONENT=typesystem-service DOCKER_PUSH_LATEST=true
     sudo: true
 
 # caching suggestions from http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
