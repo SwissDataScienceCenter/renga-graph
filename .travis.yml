@@ -31,6 +31,7 @@ matrix:
   - env: COMPONENT=typesystem-implementation
   - env: COMPONENT=typesystem-service DOCKER_PUSH_LATEST=true
     sudo: true
+  - env: COMPONENT=utils
 
 # caching suggestions from http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
 cache:
