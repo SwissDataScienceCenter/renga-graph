@@ -21,7 +21,7 @@ class GraphDomainController @Inject() (
 
   lazy val verifier: JWTVerifier = verifierProvider.get
 
-  def index: Action[AnyContent] = Action.async { implicit request =>
+  def index: Action[AnyContent] = TokenFilterAction( verifier ).async { implicit request =>
     val all = orchestrator.graphDomains.all()
     all.map( seq => Json.toJson( seq ) ).map( json => Ok( json ) )
   }
