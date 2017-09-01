@@ -1,8 +1,8 @@
 package ch.datascience.graph.init.client
 
-import ch.datascience.graph.types.{ Cardinality, DataType }
 import ch.datascience.graph.types.persistence.model.SystemPropertyKey
 import ch.datascience.graph.types.persistence.model.json.{ SystemPropertyKeyFormat, SystemPropertyKeyRequestFormat }
+import ch.datascience.graph.types.{ Cardinality, DataType }
 import play.api.libs.json.{ JsError, JsResultException, JsSuccess, Json }
 import play.api.libs.ws.WSClient
 
@@ -12,7 +12,11 @@ import scala.concurrent.Future
 /**
  * Created by johann on 22/06/17.
  */
-class SystemPropertyKeyClient( val baseUrl: String, ws: WSClient ) {
+class SystemPropertyKeyClient(
+    val baseUrl:     String,
+    val accessToken: String,
+    ws:              WSClient
+) {
 
   def getOrCreateSystemPropertyKey( name: String, dataType: DataType, cardinality: Cardinality ): Future[SystemPropertyKey] = {
     for {
@@ -27,7 +31,7 @@ class SystemPropertyKeyClient( val baseUrl: String, ws: WSClient ) {
 
   def getSystemPropertyKey( name: String ): Future[Option[SystemPropertyKey]] = {
     for {
-      response <- ws.url( s"$baseUrl/management/system_property_key/$name" ).get()
+      response <- ws.url( s"$baseUrl/management/system_property_key/$name" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).get()
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[SystemPropertyKey]( SystemPropertyKeyFormat )
@@ -43,7 +47,7 @@ class SystemPropertyKeyClient( val baseUrl: String, ws: WSClient ) {
   def createSystemPropertyKey( name: String, dataType: DataType, cardinality: Cardinality ): Future[SystemPropertyKey] = {
     val body = Json.toJson( ( name, dataType, cardinality ) )( SystemPropertyKeyRequestFormat )
     for {
-      response <- ws.url( s"$baseUrl/management/system_property_key" ).post( body )
+      response <- ws.url( s"$baseUrl/management/system_property_key" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).post( body )
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[SystemPropertyKey]( SystemPropertyKeyFormat )

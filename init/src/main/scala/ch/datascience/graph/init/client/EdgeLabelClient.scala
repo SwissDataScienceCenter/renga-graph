@@ -12,7 +12,11 @@ import scala.concurrent.Future
 /**
  * Created by johann on 22/06/17.
  */
-class EdgeLabelClient( val baseUrl: String, ws: WSClient ) {
+class EdgeLabelClient(
+    val baseUrl:     String,
+    val accessToken: String,
+    ws:              WSClient
+) {
 
   def getOrCreateEdgeLabel( namespace: String, name: String, multiplicity: Multiplicity ): Future[RichEdgeLabel] = {
     for {
@@ -27,7 +31,7 @@ class EdgeLabelClient( val baseUrl: String, ws: WSClient ) {
 
   def getEdgeLabel( namespace: String, name: String ): Future[Option[RichEdgeLabel]] = {
     for {
-      response <- ws.url( s"$baseUrl/management/edge_label/$namespace/$name" ).get()
+      response <- ws.url( s"$baseUrl/management/edge_label/$namespace/$name" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).get()
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[RichEdgeLabel]( EdgeLabelFormat )
@@ -43,7 +47,7 @@ class EdgeLabelClient( val baseUrl: String, ws: WSClient ) {
   def createEdgeLabel( namespace: String, name: String, multiplicity: Multiplicity ): Future[RichEdgeLabel] = {
     val body = Json.toJson( ( namespace, name, multiplicity ) )( EdgeLabelRequestFormat )
     for {
-      response <- ws.url( s"$baseUrl/management/edge_label" ).post( body )
+      response <- ws.url( s"$baseUrl/management/edge_label" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).post( body )
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[RichEdgeLabel]( EdgeLabelFormat )

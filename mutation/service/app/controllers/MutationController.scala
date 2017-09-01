@@ -3,10 +3,13 @@ package controllers
 import java.util.UUID
 import javax.inject.{ Inject, Singleton }
 
+import authorization.JWTVerifierProvider
 import ch.datascience.graph.elements.mutation.Mutation
 import ch.datascience.graph.elements.mutation.json.MutationFormat
 import ch.datascience.graph.elements.mutation.log.model.EventStatus
 import ch.datascience.graph.elements.mutation.log.model.json._
+import ch.datascience.graph.service.security.TokenFilterAction
+import com.auth0.jwt.JWTVerifier
 import models.{ RequestDAO, RequestWorker, ResponseWorker }
 import play.api.libs.json._
 import play.api.mvc._
@@ -18,6 +21,7 @@ import scala.concurrent.{ ExecutionContext, Future }
  */
 @Singleton
 class MutationController @Inject() (
+    verifierProvider:             JWTVerifierProvider,
     protected val requestWorker:  RequestWorker,
     protected val responseWorker: ResponseWorker,
     protected val dao:            RequestDAO
@@ -28,7 +32,9 @@ class MutationController @Inject() (
 
   implicit lazy val mutationFormat: Format[Mutation] = MutationFormat
 
-  def postMutation: Action[Mutation] = Action.async( bodyParseJson[Mutation]( MutationFormat ) ) { implicit request =>
+  lazy val verifier: JWTVerifier = verifierProvider.get
+
+  def postMutation: Action[Mutation] = TokenFilterAction( verifier ).async( bodyParseJson[Mutation]( MutationFormat ) ) { implicit request =>
     val query = request.body
     //TODO: get token from header
     val token: JsValue = Json.parse( """{ "my-token-is-empty": true }""" )
@@ -40,17 +46,11 @@ class MutationController @Inject() (
     for {
       event <- requestWorker.add( event )
     } yield {
-      //      val json = JsObject(Seq(
-      //        "uuid" -> JsString(event.uuid.toString),
-      //        "event" -> event.event,
-      //        "timestamp" -> JsString(event.created.atZone(java.time.ZoneId.of("UTC")).toString)
-      //      ))
-      //      Ok(json)
       Ok( Json.toJson( event ) )
     }
   }
 
-  def findById( id: String ): Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  def findById( id: String ): Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val json = JsString( id )
     json.validate[UUID] match {
       case JsError( e ) => Future.successful( BadRequest( JsError.toJson( e ) ) )
@@ -58,19 +58,9 @@ class MutationController @Inject() (
         val future = dao.findByIdWithResponse( uuid )
         future map {
           case Some( ( req, optRes ) ) => Ok( Json.toJson( EventStatus( req, optRes ) ) )
-          //          case Some((req, Some(res))) =>
-          //            Ok(JsObject(Seq("request" -> Json.toJson(req), "response" -> Json.toJson(res), "status" -> JsString("completed"))))
-          //          case Some((req, None)) =>
-          //            Ok(JsObject(Seq("request" -> Json.toJson(req), "status" -> JsString("pending"))))
           case None                    => NotFound
         }
     }
   }
-
-  //  private[this] implicit lazy val eventWrites: Writes[Event] = (
-  //    (JsPath \ "uuid").write[String] and
-  //      (JsPath \ "event").write[JsValue] and
-  //      (JsPath \ "timestamp").write[String]
-  //  ){ event => (event.uuid.toString, event.event, event.created.atZone(java.time.ZoneId.of("UTC")).toString) }
 
 }

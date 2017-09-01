@@ -4,8 +4,11 @@ import java.sql.SQLException
 import java.util.UUID
 import javax.inject.Inject
 
+import authorization.JWTVerifierProvider
+import ch.datascience.graph.service.security.TokenFilterAction
 import ch.datascience.graph.types.persistence.model.json._
 import ch.datascience.graph.types.{ Cardinality, DataType }
+import com.auth0.jwt.JWTVerifier
 import controllers.JsonComponent
 import injected.OrchestrationLayer
 import play.api.libs.concurrent.Execution.Implicits._
@@ -17,14 +20,19 @@ import scala.concurrent.Future
 /**
  * Created by johann on 26/04/17.
  */
-class PropertyKeyController @Inject() ( protected val orchestrator: OrchestrationLayer ) extends Controller with JsonComponent {
+class PropertyKeyController @Inject() (
+    verifierProvider:           JWTVerifierProvider,
+    protected val orchestrator: OrchestrationLayer
+) extends Controller with JsonComponent {
 
-  def index: Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  lazy val verifier: JWTVerifier = verifierProvider.get
+
+  def index: Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val all = orchestrator.propertyKeys.all()
     all.map( seq => Json.toJson( seq ) ).map( json => Ok( json ) )
   }
 
-  def findById( id: String ): Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  def findById( id: String ): Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val json = JsString( id )
     json.validate[UUID] match {
       case JsError( e ) => Future.successful( BadRequest( JsError.toJson( e ) ) )
@@ -37,7 +45,7 @@ class PropertyKeyController @Inject() ( protected val orchestrator: Orchestratio
     }
   }
 
-  def findByNamespaceAndName( namespace: String, name: String ): Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  def findByNamespaceAndName( namespace: String, name: String ): Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val future = orchestrator.propertyKeys.findByNamespaceAndName( namespace, name )
     future map {
       case Some( propertyKey ) => Ok( Json.toJson( propertyKey ) )
@@ -45,7 +53,7 @@ class PropertyKeyController @Inject() ( protected val orchestrator: Orchestratio
     }
   }
 
-  def create: Action[( String, String, DataType, Cardinality )] = Action.async( bodyParseJson[( String, String, DataType, Cardinality )]( PropertyKeyRequestFormat ) ) { implicit request =>
+  def create: Action[( String, String, DataType, Cardinality )] = TokenFilterAction( verifier ).async( bodyParseJson[( String, String, DataType, Cardinality )]( PropertyKeyRequestFormat ) ) { implicit request =>
     val ( namespace, name, dataType, cardinality ) = request.body
     val future = orchestrator.propertyKeys.createPropertyKey( namespace, name, dataType, cardinality )
     future map { propertyKey => Ok( Json.toJson( propertyKey ) ) } recover {

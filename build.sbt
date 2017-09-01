@@ -21,7 +21,8 @@ lazy val root = (project in file("."))
     `mutation-service`,
     `navigation-service`,
     `typesystem-implementation`,
-    `typesystem-service`
+    `typesystem-service`,
+    utils
   )
 
 lazy val core = (project in file("core"))
@@ -56,11 +57,12 @@ lazy val `mutation-service` = (project in file("mutation/service"))
     projectDependencies +=
       (projectID in `mutation-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
   ).dependsOn(
-  core,
-  `mutation-implementation`
-).enablePlugins(
-  PlayScala
-)
+    core,
+    `mutation-implementation`,
+    utils
+  ).enablePlugins(
+    PlayScala
+  )
 
 lazy val `navigation-service` = (project in file("navigation/service"))
   .settings(
@@ -88,9 +90,18 @@ lazy val `typesystem-service` = (project in file("typesystem/service"))
       (projectID in `typesystem-implementation`).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
   ).dependsOn(
     core,
-    `typesystem-implementation`
+    `typesystem-implementation`,
+    utils
   ).enablePlugins(
     PlayScala
+  )
+
+lazy val utils = (project in file("utils"))
+  .settings(
+    commonSettings,
+    ourScalariformPreferences
+  ).dependsOn(
+  core
   )
 
 // Source code formatting
