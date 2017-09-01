@@ -11,7 +11,11 @@ import scala.concurrent.Future
 /**
  * Created by johann on 22/06/17.
  */
-class GraphDomainClient( val baseUrl: String, ws: WSClient ) {
+class GraphDomainClient(
+    val baseUrl:     String,
+    val accessToken: String,
+    ws:              WSClient
+) {
 
   def getOrCreateGraphDomain( name: String ): Future[GraphDomain] = {
     for {
@@ -26,7 +30,7 @@ class GraphDomainClient( val baseUrl: String, ws: WSClient ) {
 
   def getGraphDomain( name: String ): Future[Option[GraphDomain]] = {
     for {
-      response <- ws.url( s"$baseUrl/management/graph_domain/$name" ).get()
+      response <- ws.url( s"$baseUrl/management/graph_domain/$name" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).get()
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[GraphDomain]( GraphDomainFormat )
@@ -42,7 +46,7 @@ class GraphDomainClient( val baseUrl: String, ws: WSClient ) {
   def createGraphDomain( name: String ): Future[GraphDomain] = {
     val body = Json.toJson( name )( GraphDomainRequestFormat )
     for {
-      response <- ws.url( s"$baseUrl/management/graph_domain" ).post( body )
+      response <- ws.url( s"$baseUrl/management/graph_domain" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).post( body )
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[GraphDomain]( GraphDomainFormat )

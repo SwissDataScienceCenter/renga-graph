@@ -21,7 +21,8 @@ lazy val root = (project in file("."))
     `mutation-service`,
     `navigation-service`,
     `typesystem-implementation`,
-    `typesystem-service`
+    `typesystem-service`,
+    utils
   )
 
 lazy val core = (project in file("core"))

@@ -13,7 +13,11 @@ import scala.concurrent.Future
 /**
  * Created by johann on 22/06/17.
  */
-class NamedTypeClient( val baseUrl: String, ws: WSClient ) {
+class NamedTypeClient(
+    val baseUrl:     String,
+    val accessToken: String,
+    ws:              WSClient
+) {
 
   def getOrCreateNamedType( namespace: String, name: String, superTypes: Seq[NamespaceAndName], properties: Seq[NamespaceAndName] ): Future[RichNamedType] = {
     for {
@@ -28,7 +32,7 @@ class NamedTypeClient( val baseUrl: String, ws: WSClient ) {
 
   def getNamedType( namespace: String, name: String ): Future[Option[RichNamedType]] = {
     for {
-      response <- ws.url( s"$baseUrl/management/named_type/$namespace/$name" ).get()
+      response <- ws.url( s"$baseUrl/management/named_type/$namespace/$name" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).get()
     } yield response.status match {
       case 200 =>
         println( response.json )
@@ -45,7 +49,7 @@ class NamedTypeClient( val baseUrl: String, ws: WSClient ) {
   def createNamedType( namespace: String, name: String, superTypes: Seq[NamespaceAndName], properties: Seq[NamespaceAndName] ): Future[RichNamedType] = {
     val body = Json.toJson( ( namespace, name, superTypes, properties ) )( NamedTypeRequestFormat )
     for {
-      response <- ws.url( s"$baseUrl/management/named_type" ).post( body )
+      response <- ws.url( s"$baseUrl/management/named_type" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).post( body )
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[RichNamedType]( NamedTypeFormat )
