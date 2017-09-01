@@ -30,7 +30,11 @@ import scala.concurrent.Future
 /**
  * Created by johann on 22/06/17.
  */
-class PropertyKeyClient( val baseUrl: String, ws: WSClient ) {
+class PropertyKeyClient(
+    val baseUrl:     String,
+    val accessToken: String,
+    ws:              WSClient
+) {
 
   def getOrCreatePropertyKey( namespace: String, name: String, dataType: DataType, cardinality: Cardinality ): Future[RichPropertyKey] = {
     for {
@@ -45,7 +49,7 @@ class PropertyKeyClient( val baseUrl: String, ws: WSClient ) {
 
   def getPropertyKey( namespace: String, name: String ): Future[Option[RichPropertyKey]] = {
     for {
-      response <- ws.url( s"$baseUrl/management/property_key/$namespace/$name" ).get()
+      response <- ws.url( s"$baseUrl/management/property_key/$namespace/$name" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).get()
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[RichPropertyKey]( PropertyKeyFormat )
@@ -61,7 +65,7 @@ class PropertyKeyClient( val baseUrl: String, ws: WSClient ) {
   def createPropertyKey( namespace: String, name: String, dataType: DataType, cardinality: Cardinality ): Future[RichPropertyKey] = {
     val body = Json.toJson( ( namespace, name, dataType, cardinality ) )( PropertyKeyRequestFormat )
     for {
-      response <- ws.url( s"$baseUrl/management/property_key" ).post( body )
+      response <- ws.url( s"$baseUrl/management/property_key" ).withHeaders( ( "Authorization", s"Bearer $accessToken" ) ).post( body )
     } yield response.status match {
       case 200 =>
         val result = response.json.validate[RichPropertyKey]( PropertyKeyFormat )
