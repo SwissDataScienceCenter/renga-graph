@@ -4,13 +4,15 @@ import java.sql.SQLException
 import java.util.UUID
 import javax.inject.Inject
 
+import authorization.JWTVerifierProvider
 import ch.datascience.graph.naming.NamespaceAndName
+import ch.datascience.graph.service.security.TokenFilterAction
+import com.auth0.jwt.JWTVerifier
 import controllers.JsonComponent
 import injected.OrchestrationLayer
 //import models.json._
 import ch.datascience.graph.types.persistence.model.json.{ NamedTypeFormat, NamedTypeRequestFormat }
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -19,14 +21,19 @@ import scala.concurrent.Future
 /**
  * Created by johann on 15/05/17.
  */
-class NamedTypeController @Inject() ( protected val orchestrator: OrchestrationLayer ) extends Controller with JsonComponent {
+class NamedTypeController @Inject() (
+    verifierProvider:           JWTVerifierProvider,
+    protected val orchestrator: OrchestrationLayer
+) extends Controller with JsonComponent {
 
-  def index: Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  lazy val verifier: JWTVerifier = verifierProvider.get
+
+  def index: Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val all = orchestrator.namedTypes.all()
     all.map( seq => Json.toJson( seq ) ).map( json => Ok( json ) )
   }
 
-  def findById( id: String ): Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  def findById( id: String ): Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val json = JsString( id )
     json.validate[UUID] match {
       case JsError( e ) => Future.successful( BadRequest( JsError.toJson( e ) ) )
@@ -39,7 +46,7 @@ class NamedTypeController @Inject() ( protected val orchestrator: OrchestrationL
     }
   }
 
-  def findByNamespaceAndName( namespace: String, name: String ): Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  def findByNamespaceAndName( namespace: String, name: String ): Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val future = orchestrator.namedTypes.findByNamespaceAndName( namespace, name )
     future map {
       case Some( namedTypes ) => Ok( Json.toJson( namedTypes ) )
@@ -47,7 +54,7 @@ class NamedTypeController @Inject() ( protected val orchestrator: OrchestrationL
     }
   }
 
-  def create: Action[( String, String, Seq[NamespaceAndName], Seq[NamespaceAndName] )] = Action.async( bodyParseJson[( String, String, Seq[NamespaceAndName], Seq[NamespaceAndName] )]( NamedTypeRequestFormat ) ) { implicit request =>
+  def create: Action[( String, String, Seq[NamespaceAndName], Seq[NamespaceAndName] )] = TokenFilterAction( verifier ).async( bodyParseJson[( String, String, Seq[NamespaceAndName], Seq[NamespaceAndName] )]( NamedTypeRequestFormat ) ) { implicit request =>
     val ( namespace, name, superTypes, properties ) = request.body
     val future = orchestrator.namedTypes.createNamedType( namespace, name, superTypes.toSet, properties.toSet )
     future map { namedType => Ok( Json.toJson( namedType ) ) } recover {
