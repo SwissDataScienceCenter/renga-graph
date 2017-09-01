@@ -22,8 +22,11 @@ import java.sql.SQLException
 import java.util.UUID
 import javax.inject.Inject
 
+import authorization.JWTVerifierProvider
+import ch.datascience.graph.service.security.TokenFilterAction
 import ch.datascience.graph.types.Multiplicity
 import ch.datascience.graph.types.persistence.model.json._
+import com.auth0.jwt.JWTVerifier
 import controllers.JsonComponent
 import injected.OrchestrationLayer
 import play.api.libs.concurrent.Execution.Implicits._
@@ -35,14 +38,19 @@ import scala.concurrent.Future
 /**
  * Created by johann on 26/04/17.
  */
-class EdgeLabelController @Inject() ( protected val orchestrator: OrchestrationLayer ) extends Controller with JsonComponent {
+class EdgeLabelController @Inject() (
+    verifierProvider:           JWTVerifierProvider,
+    protected val orchestrator: OrchestrationLayer
+) extends Controller with JsonComponent {
 
-  def index: Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  lazy val verifier: JWTVerifier = verifierProvider.get
+
+  def index: Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val all = orchestrator.edgeLabels.all()
     all.map( seq => Json.toJson( seq ) ).map( json => Ok( json ) )
   }
 
-  def findById( id: String ): Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  def findById( id: String ): Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val json = JsString( id )
     json.validate[UUID] match {
       case JsError( e ) => Future.successful( BadRequest( JsError.toJson( e ) ) )
@@ -55,7 +63,7 @@ class EdgeLabelController @Inject() ( protected val orchestrator: OrchestrationL
     }
   }
 
-  def findByNamespaceAndName( namespace: String, name: String ): Action[Unit] = Action.async( BodyParsers.parse.empty ) { implicit request =>
+  def findByNamespaceAndName( namespace: String, name: String ): Action[Unit] = TokenFilterAction( verifier ).async( BodyParsers.parse.empty ) { implicit request =>
     val future = orchestrator.edgeLabels.findByNamespaceAndName( namespace, name )
     future map {
       case Some( edgeLabel ) => Ok( Json.toJson( edgeLabel ) )
@@ -63,7 +71,7 @@ class EdgeLabelController @Inject() ( protected val orchestrator: OrchestrationL
     }
   }
 
-  def create: Action[( String, String, Multiplicity )] = Action.async( bodyParseJson[( String, String, Multiplicity )]( EdgeLabelRequestFormat ) ) { implicit request =>
+  def create: Action[( String, String, Multiplicity )] = TokenFilterAction( verifier ).async( bodyParseJson[( String, String, Multiplicity )]( EdgeLabelRequestFormat ) ) { implicit request =>
     val ( namespace, name, multiplicity ) = request.body
     val future = orchestrator.edgeLabels.createEdgeLabel( namespace, name, multiplicity )
     future map { edgeLabel => Ok( Json.toJson( edgeLabel ) ) } recover {
