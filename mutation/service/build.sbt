@@ -38,10 +38,3 @@ libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-
 import com.typesafe.sbt.packager.docker._
 dockerBaseImage := "openjdk:8-jre-alpine"
 dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
-// Replace entry point
-dockerCommands ~= { cmds =>
-  cmds.map {
-    case ExecCmd("ENTRYPOINT", args@_*) => ExecCmd("ENTRYPOINT", args ++ Seq("-Dconfig.resource=application.docker.conf"): _*)
-    case cmd => cmd
-  }
-}
