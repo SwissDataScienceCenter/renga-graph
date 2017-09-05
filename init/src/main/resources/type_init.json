@@ -77,6 +77,11 @@
       "key": "project:project_name",
       "data_type": "string",
       "cardinality": "single"
+    },
+    {
+      "key": "annotation:label",
+      "data_type": "string",
+      "cardinality": "set"
     }
   ],
 
