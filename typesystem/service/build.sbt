@@ -28,12 +28,12 @@ libraryDependencies += "org.postgresql" % "postgresql" % postgresql_version
 // Runtime dependencies (runtime removed to load them when sbt console; I am too lazy to redefine console)
 lazy val h2_version = "1.4.193"
 lazy val janusgraph_version = "0.1.0"
-
 libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version
 
 lazy val scalatestplus_play_version = "2.0.0"
-
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % scalatestplus_play_version % Test
+
+libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.8.9"
 
 
 import com.typesafe.sbt.packager.docker._

@@ -1,0 +1,176 @@
+# API spec in YAML
+swagger: '2.0'
+info:
+  title: Graph Typesystem API
+  description: |
+    Graph Typesystem API specification
+  version: '0.1.0'
+# Host and schemes are injected by the service
+# will be prefixed to all paths
+basePath: /api/types
+produces:
+- application/json
+consumes:
+- application/json
+tags:
+- name: 'Typesystem'
+  description: 'Perform operations on the typesystem registry'
+paths:
+  /scope/property:
+    get:
+      tags:
+      - 'Typesystem'
+      summary: 'Returns all known property keys'
+      responses:
+        200:
+          description: 'Ok'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Property Key'
+    post:
+      tags:
+      - 'Typesystem'
+      summary: 'Find property keys'
+      parameters:
+      - name: property_keys
+        in: body
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/Key'
+      responses:
+        200:
+          description: 'Ok'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Property Key'
+  /scope/property/{namespace}/{name}:
+    get:
+      tags:
+      - 'Typesystem'
+      summary: 'Find a property key'
+      parameters:
+      - name: namespace
+        in: path
+        description: 'the namespace of the property'
+        type: string
+        required: true
+      - name: name
+        in: path
+        description: 'the name of the property'
+        type: string
+        required: true
+      responses:
+        200:
+          description: 'Ok'
+          schema:
+            $ref: '#/definitions/Property Key'
+        404:
+          description: 'Property key not found'
+  /scope/type:
+    get:
+      tags:
+      - 'Typesystem'
+      summary: 'Returns all known named types'
+      responses:
+        200:
+          description: 'Ok'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NamedType'
+    post:
+      tags:
+      - 'Typesystem'
+      summary: 'Find named types'
+      parameters:
+      - name: named_types
+        in: body
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/Key'
+      responses:
+        200:
+          description: 'Ok'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NamedType'
+  /scope/type/{namespace}/{name}:
+    get:
+      tags:
+      - 'Typesystem'
+      summary: 'Find a named type'
+      parameters:
+      - name: namespace
+        in: path
+        description: 'the namespace of the type'
+        type: string
+        required: true
+      - name: name
+        in: path
+        description: 'the name of the type'
+        type: string
+        required: true
+      responses:
+        200:
+          description: 'Ok'
+          schema:
+            $ref: '#/definitions/NamedType'
+        404:
+          description: 'Named type not found'
+definitions:
+  Property Key:
+    type: object
+    required:
+    - key
+    - data_type
+    - cardinality
+    properties:
+      key:
+        $ref: '#/definitions/Key'
+      data_type:
+        $ref: '#/definitions/DataType'
+      cardinality:
+        $ref: '#/definitions/Cardinality'
+    example:
+      key: 'project:project_name'
+      data_type: 'string'
+      cardinality: 'single'
+  NamedType:
+    type: object
+    required:
+    - key
+    - super_types
+    - properties
+    properties:
+      key:
+        $ref: '#/definitions/Key'
+      super_types:
+        type: array
+        items:
+          $ref: '#/definitions/Key'
+      properties:
+        type: array
+        items:
+          $ref: '#/definitions/Key'
+  Key:
+    type: string
+    pattern: '^([-A-Za-z0-9_/.]*):([-A-Za-z0-9_/.]+)$'
+    example: 'resource:owner'
+  DataType:
+    type: string
+    enum:
+    - 'string'
+    - 'character'
+  Cardinality:
+    type: string
+    enum:
+    - 'single'
+    - 'set'
+    - 'list'
