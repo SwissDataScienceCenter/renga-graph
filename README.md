@@ -11,7 +11,7 @@ and is a [multi-project build](http://www.scala-sbt.org/0.13/docs/Multi-Project.
 renga-graph
 ├── build.sbt            // root build definition
 ├── core/                // definitions for graph elements, typing, etc.
-├── init/                // graph initilaization Service
+├── init/                // graph initilization service
 ├── mutation/
 │   ├── implementation/  // mutation-related code
 │   └── service/         // graph mutation service
