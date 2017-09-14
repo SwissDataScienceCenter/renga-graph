@@ -4,7 +4,7 @@ info:
   title: Graph Mutation API
   description: |
     Graph Mutation API specification
-  version: '0.0.1'
+  version: '0.1.0'
 # Host and schemes are injected by the service
 # will be prefixed to all paths
 basePath: /api/mutation
