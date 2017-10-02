@@ -16,19 +16,28 @@
  * limitations under the License.
  */
 
-name := "renga-graph-core"
+package ch.datascience.graph.elements.schema
 
-lazy val play_version = "2.5.14"
-lazy val tinkerpop_version = "3.2.3"
+import play.api.libs.json.JsObject
 
-libraryDependencies += "com.typesafe.play" %% "play-json" % play_version
-libraryDependencies += "com.typesafe.play" %% "play-ws" % play_version
-libraryDependencies += "org.apache.tinkerpop" % "gremlin-core" % tinkerpop_version
+object GenerateSchema {
 
-lazy val scalatest_version = "3.0.1"
+  def main( args: Array[String] ): Unit = {
+    val schema = generateSchema
+    println( schema )
+  }
 
-libraryDependencies += "org.scalatest" %% "scalatest" % scalatest_version % Test
+  def generateSchema: JsObject = {
+    JsObject( Seq(
+      "definitions" -> JsObject(
+        VertexSchema.allSchemas
+          ++ EdgeSchema.allSchemas
+          ++ PropertySchema.allSchemas
+          ++ VertexPropertySchema.allSchemas
+          ++ HasPropertiesSchema.allSchemas
+          ++ HasVertexPropertiesSchema.allSchemas
+      )
+    ) )
+  }
 
-lazy val generateSchema = taskKey[Unit]("Generate json schema for graph element")
-fullRunTask(generateSchema, Compile, "ch.datascience.graph.elements.schema.GenerateSchema")
-
+}

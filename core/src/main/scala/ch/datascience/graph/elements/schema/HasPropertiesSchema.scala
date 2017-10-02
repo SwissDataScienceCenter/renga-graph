@@ -16,19 +16,32 @@
  * limitations under the License.
  */
 
-name := "renga-graph-core"
+package ch.datascience.graph.elements.schema
 
-lazy val play_version = "2.5.14"
-lazy val tinkerpop_version = "3.2.3"
+import ch.datascience.graph.types.DataType
+import play.api.libs.json._
 
-libraryDependencies += "com.typesafe.play" %% "play-json" % play_version
-libraryDependencies += "com.typesafe.play" %% "play-ws" % play_version
-libraryDependencies += "org.apache.tinkerpop" % "gremlin-core" % tinkerpop_version
+object HasPropertiesSchema {
 
-lazy val scalatest_version = "3.0.1"
+  def allSchemas: Map[String, JsObject] = {
+    Map( "HasProperties" -> hasPropertiesSchema )
+  }
 
-libraryDependencies += "org.scalatest" %% "scalatest" % scalatest_version % Test
+  def hasPropertiesSchema: JsObject = {
+    JsObject( Seq(
+      "type" -> JsString( "object" ),
+      "properties" -> JsObject( propertiesMap )
+    ) )
+  }
 
-lazy val generateSchema = taskKey[Unit]("Generate json schema for graph element")
-fullRunTask(generateSchema, Compile, "ch.datascience.graph.elements.schema.GenerateSchema")
+  def propertiesMap: Map[String, JsObject] = {
+    val seq = for {
+      dt <- DataType.dataTypes
+    } yield s"${dt.name.toLowerCase}_properties" -> JsObject( Seq(
+      "type" -> JsString( "array" ),
+      "items" -> JsObject( Seq( "$ref" -> JsString( s"#/definitions/${dt.name.capitalize}Property" ) ) )
+    ) )
+    seq.toMap
+  }
 
+}
