@@ -24,3 +24,9 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.2")
 
 // Scalariform plugin for code formatting
 addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.7.1")
+
+// Sonatype plugin
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.0")
+
+// SBT PGP plugin
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
