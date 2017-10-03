@@ -3,8 +3,14 @@ branches:
   - master
 language: scala
 scala:
-- '2.11.8'
-before_script: bash ./.travis/make-nexus-credentials.sh
+- 2.11.8
+env:
+  global:
+  - DOCKER_REPOSITORY=rengahub
+  - secure: yWSl7u+2ODmZn6q4Zsqezehf7YfjqJLB5hPq8FR3B+m245+uW8kFBl2gmlsBl3juD5fPl+CeZtAq9YJMMJiuF9M+lRSnApQYQDMO19N0dZG9rOXb6Jg6me3cRq+VDoEzfMBq58dHf4fnTS7aajBjWs5MIb4jMzOSkHZ+6ALu+XtUeGiNFrjGw1vxVmPbDHHe/h8BzH5TTJ6sboJs+gcUPR0sVE7oD30IG8QzLEuGX41zzEPDe+WJG3SNrfcK79Wu301E/uSXcvb7AO+65Hjj6QVJoRfFN5wyBXiB+5GcCZY43kK7gBOUiE66U993ivZqwGI5bhSsoTcvhZfMFgB9ywPoi0RvIbiNjyffEmCn6you7u4Q2Zfrl+kD3d6q9QKrEmSS9TVdz3QCFBMEmckE6LN1OqJXLe/TvUMzKDDELp/V+3kjv8birsn+LfoQcnmoeMxjjQD8oUpsKNAueaOcUznTJBJUNkXs4lnrL4Em+LwrFGHhip+dDDvx+zgQCyNWUWDBXOYxCmW3hOe8wKvJ23Z1xJgNfePU8lxmd72BAR1DJdTd+MlKh6xNufyRBJRtNiMtXOaL8erSFkQWmiw/cJD9vKyWymhczWrbqcLEU1Qw1685f0esY+uTgy1996JuWNetY+7m2/fr8w66vkwIHojoo/OZMrYgzWU5KoRCYAc=
+  - secure: ZuJmVrj61WJ3HE8RZa8DKGqJv09WExOxxIr9zbvx7/5svHcmW+8sAaNptF5ExUM1NrW5sZH5nUaXhb8LWLXLIzITO9EXXcNYr5Rhw8DYl2q9Mm0xXUz0xVdLUbDT+Wl6oOwpeOhkoVpuuzalpkCiv7bFSrE0JDzUlYBaFnvlZ6qnNfY/4sGTF9iUa3ZCqdWTnjywZU0+gCYbfWlN5JJk/U9rIWPwrgIbYU3lXH6UpAhpaA/FkTzhHVYk8MojXgt6uHlqGy3ZZN9Jonpof1bFFYilwyUxtGyxRmeuqaaJgj0KxcmTMnfp3+84mPIQRWQ8NdIz/RaIN/YsocalUzaGTj/vu0NDbacDXPdgVZ58L6UKaAFViVJ4ju9ohz04ySdb6Sh+ay8zhEU6y6pE0DJ9Q5BpePeMbaABitz1ivwxOFOwY/2AxO4YHl+H8Lc4m+KO30U43je/ahLln2juwEYDuCnWHXyETjOsVepTp+2onmSDe9iVwSs3toGUlntQ41nISIanTphPMttrD148DiDb3khQpcZeuXuVJu2XaPVwnZxUYSLfIQJqTw8tVTPFqsnTcVaV7jgIFl3NV6ux0PbYjXfXOqu1SGKJZlTUMKf1j499w2qoNH5Xame5r6QiXN5eBo/CCG84oBuGxLB46HfUc0sr4vbvOGJ/m3J5QEcSi8Y=
+  - secure: mAg1r1CkWepCWgLJGqCMW8Bk3vf+3PF1VgVXPtlmrJakaavcOhUdPoooM5yhxX8xQVVnjXW2l6uO2cAHzOndITr09+9VyIWbPi6idB5UoZddlbJ0ofKiCdotAXuE9q/pLGgH2Q4+AplUim+On3NrYqZE0X78HTNY323SMAqibTeSURRAWE1v4OCrjQJzQgh6dR3oribGOEQdVtxbZnU5mn8e4RZ7sTQt1yHy1bMCGFYnYkqtFysDA2BAGrzIcrsK1Q2SEES2QhO4JUDJwgERxwLIHzhzymBALFPjttbzrRm4txG8J4Q2fXGjSLFDGTYdVkH7aTlrNts0CHRrut5WZVru135V73PZ0Rw0CYA+EJ+QOZG7bAKnonIeGcPk9hEMetalmZ+BQV189JGFNvWAVVfGFamwFoj+HHsKpXeagM7i0rECtUXRvt/GECWZmTiSVOo2GGPY6Zj0QSVr+uvpEina2WqNcsa3ueiK7XmndihXW92OS+Ybi/wcuW97encBYx0hcCWSyXxcc3dmRqgxVJKrj9sXfzToeMCsBSP42tFLFoVUsBblHDMJEhXrPgY49iyXD1mvZiT4xcIzIoYlTRnA9a0EdnBfcFPEB2Kf4FIYIsg7k5Z+ArCkcNXFxQE3MCIZF54V+M9qulh6P8cCB6R02lDazjcasxiaqPJuFSA=
+  - secure: BqX9g9JFYSukIYm0DU3wuM8av6W+43j4Rn2OZ/XuPtbl8KSOkuIHRAuxZqw8KuWxzZwdm6fStszCS4HnrrCYO+/QdoPruHUAtdAxSg0/XhyrH310hKlSvdqGEq3EN4mVRZpmFYkl/GYTvxoQAwFsG/Xfm483HriKicBvGdvQ4pOUWMYAK6MgS7vMlhLlPYBrd620U7+SFm1a8Lc8OwhzUNYo3J+9BO71gX+IG/ev90yogqtlIXTMfxUZb44et/KD92H1PM042OOh7D9Vzr0GKLCQ4OwAWwhxSr+iBhrionaXOTiguO99X3THPf3L3xjKpb/asoUBl2Qq6yk/DgDFneTAKZvWEim+4P9V3KENCJa1mzK4k+RORxkgGBaI+b/lL236bwKREUz7XncmbcEcf12wZrwkqqvbfY8fjKNvtuiX1hhcpoYqnNnBLZSIte3hlMmd5LhukrUqGnefoWnCH0g4gnysW0MKi+H29wYbEkrVj6VK6iedQAu+YWvaLStMaTgAcYC6cQBQSIRAIr15n2+1lhVU1SEyWDOB/B9XBZJoYEuKGzlmJKkrtK/QmGrZ82IzyDykZ/rX0ru/5ShXDzC/Kp/sqC56wwGqNEw1iYAJ+pp23rZABBqYQ8A8JzYZKHDHhkt9x7jYcPl0ehIG6F5LQnbbWgCFPxKD3h+A69g=
 script:
 - sbt ++$TRAVIS_SCALA_VERSION "project $COMPONENT" test && bash ./.travis/check-code-formatting.sh
 deploy:
@@ -32,13 +38,10 @@ matrix:
   - env: COMPONENT=typesystem-service DOCKER_PUSH_LATEST=true
     sudo: true
   - env: COMPONENT=utils
-
-# caching suggestions from http://www.scala-sbt.org/0.13/docs/Travis-CI-with-sbt.html
 cache:
   directories:
-    - $HOME/.ivy2/cache
-    - $HOME/.sbt
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.sbt"
 before_cache:
-  # Cleanup the cached directories to avoid unnecessary cache updates
-  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
-  - find $HOME/.sbt        -name "*.lock"               -print -delete
+- find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+- find $HOME/.sbt        -name "*.lock"               -print -delete
