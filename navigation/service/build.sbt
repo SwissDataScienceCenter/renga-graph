@@ -26,6 +26,8 @@ libraryDependencies += filters
 lazy val play_slick_version = "2.1.0"
 libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
 
+libraryDependencies += "net.logstash.logback" % "logstash-logback-encoder" % "4.8"
+
 lazy val scalatestplus_play_version = "2.0.0"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % scalatestplus_play_version % Test
 

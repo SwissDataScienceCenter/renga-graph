@@ -18,6 +18,12 @@
 
 name := "renga-graph-init"
 
+lazy val logback_version = "1.1.7"
+libraryDependencies += "ch.qos.logback" % "logback-classic" % logback_version
+libraryDependencies += "ch.qos.logback" % "logback-core" % logback_version
+
+libraryDependencies += "net.logstash.logback" % "logstash-logback-encoder" % "4.8"
+
 import com.typesafe.sbt.packager.docker._
 dockerBaseImage := "openjdk:8-jre-alpine"
 dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }

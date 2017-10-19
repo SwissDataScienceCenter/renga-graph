@@ -30,6 +30,8 @@ lazy val h2_version = "1.4.193"
 lazy val janusgraph_version = "0.1.0"
 libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version
 
+libraryDependencies += "net.logstash.logback" % "logstash-logback-encoder" % "4.8"
+
 lazy val scalatestplus_play_version = "2.0.0"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % scalatestplus_play_version % Test
 
