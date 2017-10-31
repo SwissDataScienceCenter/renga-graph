@@ -87,7 +87,8 @@ lazy val `navigation-service` = (project in file("navigation/service"))
     commonSettings,
     ourScalariformPreferences
   ).dependsOn(
-    core
+    core,
+    utils
   ).enablePlugins(
     PlayScala
   )

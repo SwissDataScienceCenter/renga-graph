@@ -25,18 +25,21 @@ import ch.datascience.graph.init.client._
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.types.persistence.model
 import com.typesafe.config.{ Config, ConfigFactory }
+import org.slf4j.{ Logger, LoggerFactory }
 import play.api.libs.json.{ JsError, JsSuccess, JsValue, Json }
 import play.api.libs.ws.WSClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{ Future, Promise }
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 
 /**
  * Created by johann on 21/06/17.
  */
 object InitApplication {
+
+  lazy val logger: Logger = LoggerFactory.getLogger( "application.InitApplication" )
 
   def main( args: Array[String] ): Unit = {
     app()
@@ -44,12 +47,17 @@ object InitApplication {
 
   def app(): Unit = {
     val config: Config = ConfigFactory.load()
+    logger.info( s"Started with configuration: $config" )
 
     val script: String = config.getString( "application.script" )
     val typeInitJson: JsValue = Json.parse( readResource( s"/$script" ) )
     val typeInit = typeInitJson.validate[TypeInit]( TypeInitFormat ) match {
-      case JsSuccess( ti, _ ) => ti
-      case e: JsError         => throw new RuntimeException( Json.prettyPrint( JsError.toJson( e ) ) )
+      case JsSuccess( ti, _ ) =>
+        logger.info( s"Successfully read type init" )
+        ti
+      case e: JsError =>
+        logger.error( s"Cannot parse type init" )
+        throw new RuntimeException( Json.prettyPrint( JsError.toJson( e ) ) )
     }
 
     val client: WSClient = WSClientFactory.client
@@ -60,28 +68,52 @@ object InitApplication {
     val tokenPromise: Promise[String] = Promise()
 
     currentFuture = waitForApi( client, config )
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( _ )      => logger.info( s"API is up" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture = currentFuture.flatMap { _ => waitForTokenService( client, config ) }
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( _ )      => logger.info( s"Token service is up" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture = currentFuture.flatMap { _ => fetchToken( client, config ) }.map { token => tokenPromise.success( token ); token }
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( res )    => logger.info( s"$res" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture = currentFuture.flatMap { _ => initSystemPropertyKeys( client, getToken( tokenPromise ), config, typeInit ) }
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( res )    => logger.info( s"$res" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture = currentFuture.flatMap( _ => initGraphDomain( client, getToken( tokenPromise ), config, typeInit ) )
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( res )    => logger.info( s"$res" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture = currentFuture.flatMap( _ => initPropertyKeys( client, getToken( tokenPromise ), config, typeInit ) )
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( res )    => logger.info( s"$res" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture = currentFuture.flatMap( _ => initEdgeLabels( client, getToken( tokenPromise ), config, typeInit ) )
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( res )    => logger.info( s"$res" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture = currentFuture.flatMap( _ => initNamedTypes( client, getToken( tokenPromise ), config, typeInit ) )
-    currentFuture.onComplete( println )
+    currentFuture.onComplete {
+      case Success( res )    => logger.info( s"$res" )
+      case Failure( reason ) => logger.error( reason.getClass.getCanonicalName )
+    }
 
     currentFuture.onComplete { _ => endPromise.success( () ) }
 
@@ -97,20 +129,22 @@ object InitApplication {
     val url = s"${config.getString( "graph.api.types" )}/scope/type"
 
     def check(): Future[Unit] = {
-      println( s"Checking: $url" )
+      logger.info( s"Checking: $url" )
       val f = client.url( url ).withRequestTimeout( 30.seconds ).get()
-      f.onComplete( println )
+      f.onComplete { res => logger.info( s"Got response: $res" ) }
       for {
         response <- f
       } yield response.status match {
         case 200 => ()
-        case _   => println( response ); throw new RuntimeException( response.statusText )
+        case _ =>
+          logger.error( s"Got unexpected response: $response" )
+          throw new RuntimeException( response.statusText )
       }
     }
 
     def checkN( n: Int ): Future[Unit] = {
       require( n > 0 )
-      println( s"$n tries remaining" )
+      logger.info( s"$n tries remaining" )
       n match {
         case 1 => check()
         case _ => check().recoverWith {
@@ -128,20 +162,22 @@ object InitApplication {
     val url = config.getString( "authorization.provider.url" )
 
     def check(): Future[Unit] = {
-      println( s"Checking: $url" )
+      logger.info( s"Checking: $url" )
       val f = client.url( url ).withRequestTimeout( 30.seconds ).get()
-      f.onComplete( println )
+      f.onComplete { res => logger.info( s"Got response: $res" ) }
       for {
         response <- f
       } yield response.status match {
         case 405 => ()
-        case _   => println( response ); throw new RuntimeException( response.statusText )
+        case _ =>
+          logger.error( s"Got unexpected response: $response" )
+          throw new RuntimeException( response.statusText )
       }
     }
 
     def checkN( n: Int ): Future[Unit] = {
       require( n > 0 )
-      println( s"$n tries remaining" )
+      logger.info( s"$n tries remaining" )
       n match {
         case 1 => check()
         case _ => check().recoverWith {
