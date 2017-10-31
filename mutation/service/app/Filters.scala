@@ -18,9 +18,9 @@
 
 import javax.inject.Inject
 
+import ch.datascience.graph.service.utils.AccessLoggingFilter
 import play.api.http.DefaultHttpFilters
 import play.filters.cors.CORSFilter
-import play.filters.csrf.CSRFFilter
 import play.filters.headers.SecurityHeadersFilter
 import play.filters.hosts.AllowedHostsFilter
 
@@ -33,12 +33,12 @@ import play.filters.hosts.AllowedHostsFilter
  */
 class Filters @Inject() (
     allowedHostsFilter:    AllowedHostsFilter,
+    corsFilter:            CORSFilter,
     securityHeadersFilter: SecurityHeadersFilter,
-    securityFilter:        SecurityHeadersFilter,
-    corsFilter:            CORSFilter
+    accessLoggingFilter:   AccessLoggingFilter
 ) extends DefaultHttpFilters(
   allowedHostsFilter,
+  corsFilter,
   securityHeadersFilter,
-  securityFilter,
-  corsFilter
+  accessLoggingFilter
 )

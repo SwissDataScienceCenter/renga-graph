@@ -22,6 +22,8 @@ lazy val logback_version = "1.1.7"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % logback_version
 libraryDependencies += "ch.qos.logback" % "logback-core" % logback_version
 
+libraryDependencies += "com.typesafe.play" %% "play-logback" % "2.5.13"
+
 libraryDependencies += "net.logstash.logback" % "logstash-logback-encoder" % "4.8"
 
 import com.typesafe.sbt.packager.docker._
