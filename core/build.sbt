@@ -19,7 +19,7 @@
 name := "renga-graph-core"
 
 lazy val play_version = "2.5.14"
-lazy val tinkerpop_version = "3.2.3"
+lazy val tinkerpop_version = "3.2.6"
 
 libraryDependencies += "com.typesafe.play" %% "play-json" % play_version
 libraryDependencies += "com.typesafe.play" %% "play-ws" % play_version

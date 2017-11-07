@@ -27,7 +27,7 @@ libraryDependencies += "org.postgresql" % "postgresql" % postgresql_version
 
 // Runtime dependencies (runtime removed to load them when sbt console; I am too lazy to redefine console)
 lazy val h2_version = "1.4.193"
-lazy val janusgraph_version = "0.1.0"
+lazy val janusgraph_version = "0.2.0"
 libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version
 
 libraryDependencies += "net.logstash.logback" % "logstash-logback-encoder" % "4.8"
