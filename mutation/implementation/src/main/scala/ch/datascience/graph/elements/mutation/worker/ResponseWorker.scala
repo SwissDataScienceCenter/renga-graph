@@ -21,9 +21,10 @@ package ch.datascience.graph.elements.mutation.worker
 import java.util.UUID
 
 import ch.datascience.graph.elements.mutation.create.{ CreateEdgeOperation, CreateVertexOperation, CreateVertexPropertyOperation }
+import ch.datascience.graph.elements.mutation.delete.DeleteVertexPropertyOperation
 import ch.datascience.graph.elements.mutation.json.MutationFormat
 import ch.datascience.graph.elements.mutation.log.dao.ResponseDAO
-import ch.datascience.graph.elements.mutation.tinkerpop_mappers.{ CreateEdgeOperationMapper, CreateVertexOperationMapper, CreateVertexPropertyOperationMapper, UpdateVertexPropertyOperationMapper }
+import ch.datascience.graph.elements.mutation.tinkerpop_mappers._
 import ch.datascience.graph.elements.mutation.update.UpdateVertexPropertyOperation
 import ch.datascience.graph.elements.mutation.{ Mutation, Operation }
 import ch.datascience.graph.elements.new_.NewEdge
@@ -93,7 +94,7 @@ class ResponseWorker(
     catch {
       case e: Throwable =>
         println( s"Request failed" )
-        dao.add( requestId, JsObject( Seq( "status" -> JsString( "failed" ), "reason" -> JsString( e.getMessage ) ) ) )
+        dao.add( requestId, JsObject( Seq( "status" -> JsString( "failed" ), "reason" -> JsString( s"${e.getMessage}" ) ) ) )
         throw e
     }
 
@@ -115,6 +116,10 @@ class ResponseWorker(
       JsObject( Seq( "id" -> JsNumber( id ) ) )
     case o: UpdateVertexPropertyOperation =>
       val vertex = UpdateVertexPropertyOperationMapper( o )( g ).next()
+      val id = vertex.id().asInstanceOf[PersistedVertex#Id]
+      JsObject( Seq( "id" -> JsNumber( id ) ) )
+    case o: DeleteVertexPropertyOperation =>
+      val vertex = DeleteVertexPropertyOperationMapper( o )( g ).next()
       val id = vertex.id().asInstanceOf[PersistedVertex#Id]
       JsObject( Seq( "id" -> JsNumber( id ) ) )
     case o => throw new IllegalArgumentException( s"Unsupported operation: $o" )
