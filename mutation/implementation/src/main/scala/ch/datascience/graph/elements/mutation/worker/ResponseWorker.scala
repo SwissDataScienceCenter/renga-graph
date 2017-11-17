@@ -32,6 +32,7 @@ import ch.datascience.graph.elements.persisted.PersistedVertex
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource
 import org.janusgraph.core.JanusGraph
 import org.janusgraph.graphdb.relations.RelationIdentifier
+import play.api.Logger
 import play.api.libs.json._
 
 import scala.collection.mutable
@@ -98,6 +99,8 @@ class ResponseWorker(
         throw e
     }
 
+    logger.info( s"Processed mutation $requestId" )
+
   }
 
   def processOperation( g: GraphTraversalSource, op: Operation, idMap: mutable.Map[NewEdge#NewVertexType#TempId, NewEdge#PersistedVertexType#Id] ): JsValue = op match {
@@ -126,5 +129,7 @@ class ResponseWorker(
   }
 
   private[this] implicit lazy val e: ExecutionContext = ec
+
+  lazy val logger: Logger = Logger( "application.MutationResponseWorker" )
 
 }
