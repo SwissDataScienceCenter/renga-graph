@@ -22,6 +22,7 @@ import java.util.UUID
 
 import ch.datascience.graph.elements.mutation.log.dao.RequestDAO
 import ch.datascience.graph.elements.mutation.log.model.Event
+import play.api.Logger
 import play.api.libs.json.JsValue
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -37,9 +38,12 @@ class RequestWorker(
 
   def add( event: JsValue ): Future[Event] = dao.add( event ).map { event =>
     queue.enqueue( ( event.uuid, event.event ) )
+    logger.info( s"Received request ${event.uuid}" )
     event
   }
 
   private[this] implicit lazy val e: ExecutionContext = ec
+
+  lazy val logger: Logger = Logger( "application.MutationRequestWorker" )
 
 }
