@@ -79,7 +79,7 @@ trait NamedTypeScope { this: PropertyScope =>
     } yield key
 
     // Resolve unknown keys
-    val resolved = persistedNamedTypes.fetchNamedTypesFor( unknownKeys )
+    val resolved = if ( unknownKeys.nonEmpty ) persistedNamedTypes.fetchNamedTypesFor( unknownKeys ) else Future.successful( Map.empty )
 
     // Update resolved keys
     resolved.map( { definitions =>

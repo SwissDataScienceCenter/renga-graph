@@ -60,7 +60,7 @@ trait PropertyScope {
     } yield key
 
     // Resolve unknown keys
-    val resolved = persistedProperties.fetchPropertiesFor( unknownKeys )
+    val resolved = if ( unknownKeys.nonEmpty ) persistedProperties.fetchPropertiesFor( unknownKeys ) else Future.successful( Map.empty )
 
     // Update resolved keys
     resolved.map( { definitions =>
