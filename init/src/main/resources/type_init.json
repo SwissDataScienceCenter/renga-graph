@@ -39,6 +39,16 @@
       "cardinality": "single"
     },
     {
+      "key": "resource:file_size",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "resource:file_hash",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
       "key": "resource:path",
       "data_type": "string",
       "cardinality": "single"
